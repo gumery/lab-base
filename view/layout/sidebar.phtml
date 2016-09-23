@@ -1,0 +1,72 @@
+<?php
+$checkActive = function($routeCheckings) use($route) {
+    foreach ($routeCheckings as $routeChecking) {
+        if (0 == strncmp($routeChecking, $route, strlen($routeChecking))) {
+            return ' class="active"';
+        }
+    }
+};
+$me = _G('ME');
+$group = _G('GROUP');
+?>
+<?php if ($me->id) { ?>
+<div class="current-user">
+    <div class="user-icon">
+        <div class="user-icon-image">
+            <?php if (parse_url($me->icon)['scheme'] == 'initials') { ?>
+                <div class="user-icon-text"><?= H($me->initials)?></div>
+            <?php } else { ?>
+                <img src="<?= $me->icon(72)?>" data-retina-src="<?= $me->icon(144)?>">
+            <?php } ?>
+        </div>
+
+        <div title="<?= $me->name?>" class="user-name nowrap text-center"><?= $me->name?></div>
+        <div title="<?= $group->abbr?>" class="user-group nowrap text-muted text-center"><?= $group->abbr?></div>
+    </div>
+</div>
+<?php } ?>
+
+<div class="sidebar-menu">
+    <?php if ($me->isAllowedTo('管理经费')) {?>
+    <div class="menu-item">
+        <a href="" <?= $checkActive(['home', 'show'])?> ><i class="fa fa-fw fa-money"></i> &nbsp;<?=H(T('经费列表'))?></a>
+    </div>
+    <?php } ?>
+    <?php foreach ((array)$apps as $app_id => $app) {?>
+    <div class="menu-item">
+        <a href="gapper/client/go/<?=H($app_id)?>/<?=$group->id?>"><i class="fa fa-fw fa-<?= H($app['font_icon']?:'cubes') ?>"></i> &nbsp;<?= H($app['short_title'] ?: $app['title']) ?></a>
+    </div>
+    <?php }?>
+</div>
+
+<?php 
+$vShowQRCode = \Gini\Config::get('app.show_sidebar_qrcode');
+$vShowSPhone = \Gini\Config::get('app.show_sidebar_service_phone');
+if ($vShowQRCode || $vShowSPhone) {
+?>
+<div class="sidebar-contact">
+    <?php if ($vShowQRCode) {?>
+    <div class="text-center sidebar-code">
+        <img src="assets/img/sidebar-code.png">
+    </div>
+    <?php }?>
+    <?php if ($vShowSPhone) {?>
+    <div class="text-center phone-no">
+        <strong class="text-primary"><i class="fa fa-fw fa-phone"></i><?=H(\Gini\Config::get('app.service_phone')?:'400-843-6255')?></strong>
+    </div>
+    <?php }?>
+</div>
+<script type="text/javascript">
+require(['jquery'], function($) {
+    var $contact = $('#sidebar .sidebar-contact');
+    var $menu = $('#sidebar .sidebar-menu');
+    var min_top = $menu.offset().top + $menu.outerHeight();
+
+    $contact.css('top', Math.max($(window).height() - 150, min_top));
+
+    $(window).resize(function(event) {
+        $contact.css('top', Math.max($(window).height() - 150, min_top));
+    });
+});
+</script>
+<?php }?>
