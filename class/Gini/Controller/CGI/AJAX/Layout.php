@@ -37,6 +37,7 @@ class Layout extends \Gini\Controller\CGI
 
         $vars = [
             'route' => $this->env['route'],
+            'currentAppID'=> \Gini\Gapper\Client::getId(),
             'apps' => $apps,
         ];
 

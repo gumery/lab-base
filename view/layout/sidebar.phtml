@@ -1,11 +1,4 @@
 <?php
-$checkActive = function($routeCheckings) use($route) {
-    foreach ($routeCheckings as $routeChecking) {
-        if (0 == strncmp($routeChecking, $route, strlen($routeChecking))) {
-            return ' class="active"';
-        }
-    }
-};
 $me = _G('ME');
 $group = _G('GROUP');
 ?>
@@ -27,14 +20,9 @@ $group = _G('GROUP');
 <?php } ?>
 
 <div class="sidebar-menu">
-    <?php if ($me->isAllowedTo('管理经费')) {?>
-    <div class="menu-item">
-        <a href="" <?= $checkActive(['home', 'show'])?> ><i class="fa fa-fw fa-money"></i> &nbsp;<?=H(T('经费列表'))?></a>
-    </div>
-    <?php } ?>
     <?php foreach ((array)$apps as $app_id => $app) {?>
     <div class="menu-item">
-        <a href="gapper/client/go/<?=H($app_id)?>/<?=$group->id?>"><i class="fa fa-fw fa-<?= H($app['font_icon']?:'cubes') ?>"></i> &nbsp;<?= H($app['short_title'] ?: $app['title']) ?></a>
+        <a<?=($currentAppID==$app_id)?' class="active"':''?> href="gapper/client/go/<?=H($app_id)?>/<?=$group->id?>"><i class="fa fa-fw fa-<?= H($app['font_icon']?:'cubes') ?>"></i> &nbsp;<?= H($app['short_title'] ?: $app['title']) ?></a>
     </div>
     <?php }?>
 </div>
