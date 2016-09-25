@@ -1,9 +1,0 @@
----
-menu:
-  clients:
-    lab-grants: ${LAB_GRANTS_GAPPER_ID}
-    lab-inventory: ${LAB_INVENTORY_GAPPER_ID}
-    lab-orders: ${LAB_ORDERS_GAPPER_ID}
-    lab-waste-bottle: ${LAB_WASTE_BOTTLE_GAPPER_ID}
-    lab-waste: ${LAB_WASTE_GAPPER_ID}
-...

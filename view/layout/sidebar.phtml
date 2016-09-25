@@ -20,26 +20,20 @@ $group = _G('GROUP');
 <?php } ?>
 
 <div class="sidebar-menu">
-<?php /*
- */?>
     <?php 
-    $vMenuConfs = (array)\Gini\Config::get('sidebar.menu');
-    $vMenuClients = $vMenuConfs['clients'];
     foreach ((array)$apps as $app_id => $app) {
-        if (!in_array($app_id, $vMenuClients)) continue;
-        if ($app_id==$vMenuClients['lab-orders']) {
-            echo V('layout/sidebar/lab-orders', [
-                'clients'=>$vMenuClients, 
-                'currentAppID'=>$currentAppID,
-                'route'=> $route,
-                'app_id'=> $app_id,
-                'group'=> $group
-            ]);
-            continue;
-        }
     ?>
         <div class="menu-item">
             <a<?=($currentAppID==$app_id)?' class="active"':''?> href="gapper/client/go/<?=H($app_id)?>/<?=$group->id?>"><i class="fa fa-fw fa-<?= H($app['font_icon']?:'cubes') ?>"></i> &nbsp;<?= H($app['short_title'] ?: $app['title']) ?></a>
+            <?php 
+                if ($currentAppID==$app_id) {
+                    $vSubMenu = (string) @V('sidebar/sub-menu', [
+                        'currentAppID'=> $currentAppID,
+                        'route'=> $route
+                    ]);
+                    if ($vSubMenu) echo $vSubMenu;
+                }
+            ?>
         </div>
     <?php }?>
 </div>
