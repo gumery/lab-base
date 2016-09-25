@@ -41,6 +41,8 @@ $group = _G('GROUP');
 <?php 
 $vShowQRCode = \Gini\Config::get('app.show_sidebar_qrcode');
 $vShowSPhone = \Gini\Config::get('app.show_sidebar_service_phone');
+$vShowQRCode = is_bool($vShowQRCode) ? $vShowQRCode : true;
+$vShowSPhone = is_bool($vShowSPhone) ? $vShowSPhone : true;
 if ($vShowQRCode || $vShowSPhone) {
 ?>
 <div class="sidebar-contact">
