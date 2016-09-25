@@ -63,10 +63,26 @@ require(['jquery'], function($) {
     var $menu = $('#sidebar .sidebar-menu');
     var min_top = $menu.offset().top + $menu.outerHeight();
 
-    $contact.css('top', Math.max($(window).height() - 150, min_top));
+    var resetMe = function () {
+        var wH = $(window).height();
+        var wST = $(window).scrollTop();
+        if (wH + wST - min_top - cH >0) {
+            $contact.css('bottom', 10);
+            $contact.css('top', 'auto');
+            $contact.css('position', 'fixed');
+        }
+        else {
+            $contact.css('position', 'absolute');
+            $contact.css('bottom', 'auto');
+            $contact.css('top', Math.max($(window).height() - 150, min_top));
+        }
+    };
 
     $(window).resize(function(event) {
-        $contact.css('top', Math.max($(window).height() - 150, min_top));
+        resetMe();
+    });
+    $(window).on('scroll', function() {
+        retetMe();
     });
 });
 </script>
