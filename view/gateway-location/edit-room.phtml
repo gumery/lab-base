@@ -1,0 +1,13 @@
+<div class="form-group<?=$errors['room'] ? ' has-error' : ''?>">
+    <div>
+        <?php if (empty($rooms)) { ?>
+        <input type="text" class="form-control" name="room" value="<?=H($selected)?>" />
+        <?php } else { ?>
+        <select name="room" class="form-control">
+            <?php foreach ($rooms as $vRoom) {?>
+            <option value="<?=H($vRoom['name'])?>"<?=$vRoom['name']==$selected?' selected="selected"':''?>><?=H($vRoom['name'])?></option>
+            <?php }?>
+        </select>
+        <?php }?>
+    </div>
+</div>
