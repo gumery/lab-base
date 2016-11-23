@@ -124,9 +124,9 @@ class GatewayLocation extends \Gini\Controller\CGI
                             $roomName = $room;
                             return true;
                         }
-                        foreach ($rooms as $r) {
-                            if ($r['name']==$room) {
-                                $roomName = $room;
+                        foreach ($rooms as $rid=>$r) {
+                            if ($rid==$room) {
+                                $roomName = $r['name'];
                                 return true;
                             }
                         }
