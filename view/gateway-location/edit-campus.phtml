@@ -1,11 +1,11 @@
 <div class="form-group<?=$errors['campus'] ? ' has-error' : ''?>" data-require="plugin/edit/gateway-location">
     <label class="control-label"><?=H(T('地理信息 *'))?></label>
-    <div><select name="campus" class="form-control app-location-select-courier" data-sub-class="content-campus-sub-buildings" data-sub-url="ajax/gatewaylocation/get-sub-buildings">
+    <div><select name="<?=is_null($multiKey)?'campus':"campus[{$multiKey}]"?>" class="form-control app-location-select-courier" data-sub-class="content-campus-sub-buildings<?=is_null($multiKey)?'':"-{$multiKey}"?>" data-sub-url="ajax/gatewaylocation/get-sub-buildings">
         <?php foreach ($campuses as $vCampus) {?>
         <option value="<?=H($vCampus['code'])?>"<?=$vCampus['code']==$selected?' selected="selected"':''?>><?=H($vCampus['name'])?></option>
         <?php }?>
     </select></div>
 </div>
-<div class="content-campus-sub-buildings">
+<div class="content-campus-sub-buildings<?=is_null($multiKey)?'':"-{$multiKey}"?>">
     <?=$building?>
 </div>

@@ -1,9 +1,9 @@
 <div class="form-group<?=$errors['room'] ? ' has-error' : ''?>">
     <div>
         <?php if (empty($rooms)) { ?>
-        <input type="text" class="form-control" name="room" value="<?=H($selected)?>" />
+        <input type="text" class="form-control" name="<?=is_null($multiKey)?'room':"room[{$multiKey}]"?>" value="<?=H($selected)?>" />
         <?php } else { ?>
-        <select name="room" class="form-control">
+        <select name="<?=is_null($multiKey)?'room':"room[{$multiKey}]"?>" class="form-control">
             <?php foreach ($rooms as $vID=>$vRoom) {?>
             <option value="<?=H($vID)?>"<?=$vID==$selected?' selected="selected"':''?>><?=H($vRoom['name'])?></option>
             <?php }?>

@@ -18,8 +18,10 @@ class GatewayLocation extends \Gini\Controller\CGI
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', (string)self::getLocationRoom($code));
     }
 
-    public static function getLocationCampus($campusCode, $buildingCode, $roomCode, array $form=[], $errors=null)
+    private static $multiKey = null;
+    public static function getLocationCampus($campusCode, $buildingCode, $roomCode, array $form=[], $errors=null, $multiKey=null)
     {
+        self::$multiKey = $multiKey;
         try {
             $campuses = \Gini\Gapper\Auth\Gateway::getCampuses();
             if (empty($campuses)) {
@@ -30,9 +32,10 @@ class GatewayLocation extends \Gini\Controller\CGI
             return V('gateway-location/edit-campus-warn');
         }
 
-        $cid = $form['campus'] ?: (@$campusCode ?: current($campuses)['code']);
+        $cid = (!is_null(self::$multiKey) ? $form['campus'][$multiKey] : $form['campus']) ?: (@$campusCode ?: current($campuses)['code']);
         return V('gateway-location/edit-campus', [
             'selected'=> $cid,
+            'multiKey'=> self::$multiKey,
             'campuses'=> $campuses,
             'building'=> (string)self::getLocationBuilding($cid, $buildingCode, $roomCode, $form, $errors),
             'errors'=> $errors,
@@ -51,9 +54,10 @@ class GatewayLocation extends \Gini\Controller\CGI
             return V('gateway-location/edit-building-warn');
         }
 
-        $bid = $form['building'] ?: ($buildingCode?:current($buildings)['code']);
+        $bid = (!is_null(self::$multiKey) ? $form['building'][$multiKey] : $form['building']) ?: ($buildingCode?:current($buildings)['code']);
         return V('gateway-location/edit-building', [
             'selected'=> $bid,
+            'multiKey'=> self::$multiKey,
             'buildings'=> $buildings,
             'room'=> (string)self::getLocationRoom($bid, $roomCode, $form, $errors),
             'errors'=> $errors,
@@ -68,9 +72,10 @@ class GatewayLocation extends \Gini\Controller\CGI
         catch (\Exception $e) {
             return V('gateway-location/edit-room-warn');
         }
-        $rid = $form['room'] ?: ($roomCode?:current($rooms)['name']);
+        $rid = (!is_null(self::$multiKey) ? $form['room'][$multiKey] : $form['room']) ?: ($roomCode?:current($rooms)['name']);
         return V('gateway-location/edit-room', [
             'selected'=> $rid,
+            'multiKey'=> self::$multiKey,
             'rooms'=> $rooms,
             'errors'=> $errors,
         ]);

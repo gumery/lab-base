@@ -1,10 +1,10 @@
 <div class="form-group<?=$errors['buildings'] ? ' has-error' : ''?>">
-    <div><select name="building" class="form-control app-location-select-courier" data-sub-class="content-building-sub-rooms" data-sub-url="ajax/gatewaylocation/get-sub-rooms">
+<div><select name="<?=is_null($multiKey)?'building':"building[{$multiKey}]"?>" class="form-control app-location-select-courier" data-sub-class="content-building-sub-rooms<?=is_null($multiKey)?'':"-{$multiKey}"?>" data-sub-url="ajax/gatewaylocation/get-sub-rooms">
         <?php foreach ($buildings as $vBuilding) {?>
         <option value="<?=H($vBuilding['code'])?>"<?=$vBuilding['code']==$selected?' selected="selected"':''?>><?=H($vBuilding['name'])?></option>
         <?php }?>
     </select></div>
 </div>
-<div class="content-building-sub-rooms">
+<div class="content-building-sub-rooms<?=is_null($multiKey)?'':"-{$multiKey}"?>">
     <?=$room?>
 </div>
