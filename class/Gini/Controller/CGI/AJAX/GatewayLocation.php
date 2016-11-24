@@ -4,10 +4,12 @@ namespace Gini\Controller\CGI\AJAX;
 
 class GatewayLocation extends \Gini\Controller\CGI
 {
+    private static $multiKey = null;
     public function actionGetSubBuildings()
     {
         $form = $this->form('get');
         $code = $form['value'];
+		self::$multiKey = $form['multiKey'];
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', (string)self::getLocationBuilding($code));
     }
 
@@ -15,10 +17,10 @@ class GatewayLocation extends \Gini\Controller\CGI
     {
         $form = $this->form('get');
         $code = $form['value'];
+		self::$multiKey = $form['multiKey'];
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', (string)self::getLocationRoom($code));
     }
 
-    private static $multiKey = null;
     public static function getLocationCampus($campusCode, $buildingCode, $roomCode, array $form=[], $errors=null, $multiKey=null)
     {
         self::$multiKey = $multiKey;
