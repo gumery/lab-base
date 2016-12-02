@@ -112,7 +112,7 @@ class GatewayLocation extends \Gini\Controller\CGI
 	
     private static function validateSets()
     {
-		$errors = [];
+        $errors = [];
         $codes = [];
         $names = [];
 
@@ -148,7 +148,7 @@ class GatewayLocation extends \Gini\Controller\CGI
                 ->validate('campus', function() use($campus, &$campusName) {
                     try {
     	                $campuses = \Gini\Gapper\Auth\Gateway::getCampuses();
-       		            if (empty($campuses)) {
+       	                if (empty($campuses)) {
                         	throw new \Exception();
                     	}
                         foreach ($campuses as $c) {
@@ -156,7 +156,7 @@ class GatewayLocation extends \Gini\Controller\CGI
                                 $campusName = $c['name'];
                                 return true;
                             }
-    	                }
+                        }
                     } 
                     catch (\Exception $e) {
                         return false;
@@ -183,7 +183,7 @@ class GatewayLocation extends \Gini\Controller\CGI
                 ->validate('building', function() use($campus, $building, &$buildingName) {
                     try {
     	                $buildings = \Gini\Gapper\Auth\Gateway::getBuildings(['campus'=>$campus]);
-       		            if (empty($buildings)) {
+       	                if (empty($buildings)) {
                         	throw new \Exception();
                     	}
                         foreach ($buildings as $b) {
@@ -191,7 +191,7 @@ class GatewayLocation extends \Gini\Controller\CGI
                                 $buildingName = $b['name'];
                                 return true;
                             }
-    	                }
+                        }
                     } 
                     catch (\Exception $e) {
                         return false;
@@ -216,10 +216,10 @@ class GatewayLocation extends \Gini\Controller\CGI
     	    $validator
     	        ->validate('room', function() use($building, $room, &$roomName) {
                     try {
-    	                $rooms = \Gini\Gapper\Auth\Gateway::getRooms(['building'=>$building]);
+                        $rooms = \Gini\Gapper\Auth\Gateway::getRooms(['building'=>$building]);
        		            if (empty($rooms)) {
                         	throw new \Exception();
-                    	}
+                        }
                         foreach ($rooms as $rid => $r) {
                             if ($rid==$room) {
                                 $roomName = $r['name'];
@@ -233,7 +233,7 @@ class GatewayLocation extends \Gini\Controller\CGI
                 }, T('请选择房间'))
                 ->done();
         } catch (\Gini\CGI\Validator\Exception $e) {
-             $errors = (array)$validator->errors();
+            $errors = (array)$validator->errors();
         }
 
         return [
