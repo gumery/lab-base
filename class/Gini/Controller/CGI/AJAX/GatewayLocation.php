@@ -147,7 +147,7 @@ class GatewayLocation extends \Gini\Controller\CGI
     	    $validator
                 ->validate('campus', function() use($campus, &$campusName) {
                     try {
-    	                $campuses = \Gini\Gapper\Auth\Gateway::getCampuses();
+                        $campuses = \Gini\Gapper\Auth\Gateway::getCampuses();
        	                if (empty($campuses)) {
                             throw new \Exception();
                         }
@@ -182,7 +182,7 @@ class GatewayLocation extends \Gini\Controller\CGI
             $validator
                 ->validate('building', function() use($campus, $building, &$buildingName) {
                     try {
-    	                $buildings = \Gini\Gapper\Auth\Gateway::getBuildings(['campus'=>$campus]);
+                        $buildings = \Gini\Gapper\Auth\Gateway::getBuildings(['campus'=>$campus]);
        	                if (empty($buildings)) {
                             throw new \Exception();
                         }
