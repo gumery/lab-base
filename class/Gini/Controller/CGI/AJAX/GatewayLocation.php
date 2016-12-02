@@ -149,8 +149,8 @@ class GatewayLocation extends \Gini\Controller\CGI
                     try {
     	                $campuses = \Gini\Gapper\Auth\Gateway::getCampuses();
        	                if (empty($campuses)) {
-                        	throw new \Exception();
-                    	}
+                            throw new \Exception();
+                        }
                         foreach ($campuses as $c) {
                             if ($c['code']==$campus) {
                                 $campusName = $c['name'];
@@ -184,8 +184,8 @@ class GatewayLocation extends \Gini\Controller\CGI
                     try {
     	                $buildings = \Gini\Gapper\Auth\Gateway::getBuildings(['campus'=>$campus]);
        	                if (empty($buildings)) {
-                        	throw new \Exception();
-                    	}
+                            throw new \Exception();
+                        }
                         foreach ($buildings as $b) {
                             if ($b['code']==$building) {
                                 $buildingName = $b['name'];
@@ -218,7 +218,7 @@ class GatewayLocation extends \Gini\Controller\CGI
                     try {
                         $rooms = \Gini\Gapper\Auth\Gateway::getRooms(['building'=>$building]);
        		            if (empty($rooms)) {
-                        	throw new \Exception();
+                            throw new \Exception();
                         }
                         foreach ($rooms as $rid => $r) {
                             if ($rid==$room) {
