@@ -217,7 +217,7 @@ class GatewayLocation extends \Gini\Controller\CGI
     	        ->validate('room', function() use($building, $room, &$roomName) {
                     try {
                         $rooms = \Gini\Gapper\Auth\Gateway::getRooms(['building'=>$building]);
-       		            if (empty($rooms)) {
+                        if (empty($rooms)) {
                             throw new \Exception();
                         }
                         foreach ($rooms as $rid => $r) {
