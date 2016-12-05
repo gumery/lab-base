@@ -100,7 +100,7 @@ class GatewayLocation extends \Gini\Controller\CGI
         list($cErrors, $campus, $campusName) = self::validateCampus($campus);
         list($bErrors, $building, $buildingName) = self::validateBuilding($building, $campus);
         list($rErrors, $room, $roomName) = self::validateRoom($room, $building);
-        $errors = \Gini\Util::arrayMergeDeep((array)\Gini\Util::arrayMergeDeep((array)$cErrors, (array)$bErrors), (array)$rErrors);
+        $errors = \Gini\Util::arrayMergeDeep((array)\Gini\Util::arrayMergeDeep($cErrors, $bErrors), $rErrors);
 		
         return [
             $errors, 
@@ -125,7 +125,7 @@ class GatewayLocation extends \Gini\Controller\CGI
         foreach ($sets as $k=>$v) {
             list($tError, $code, $name) = call_user_func_array([self, $method], [$v, $pas[$k]]);
             if (!empty($tError) && $tError[$type]) {
-                $errors[$type][$k] = $tError[$type];
+                $errors[(string)$type][(string)$k] = $tError[$type];
             }
             $codes[$k] = $code;
             $names[$k] = $name;
