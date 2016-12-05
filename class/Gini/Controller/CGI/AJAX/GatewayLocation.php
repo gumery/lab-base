@@ -100,7 +100,7 @@ class GatewayLocation extends \Gini\Controller\CGI
         list($cErrors, $campus, $campusName) = self::validateCampus($campus);
         list($bErrors, $building, $buildingName) = self::validateBuilding($building, $campus);
         list($rErrors, $room, $roomName) = self::validateRoom($room, $building);
-        $errors = \Gini\Util::arrayMergeDeep((array)\Gini\Util::arrayMergeDeep($cErrors, $bErrors), $rErrors);
+        $errors = array_merge($cErrors, $bErrors, $rErrors);
 		
         return [
             $errors, 
