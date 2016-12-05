@@ -83,19 +83,72 @@ class GatewayLocation extends \Gini\Controller\CGI
         ]);
     }
 
+    private static function getValue($value)
+    {
+        if (!is_array($value)) return trim($value);
+        return array_map(function($v) {
+            return trim($v);
+        }, $value);
+    }
+
     public static function validate($form)
     {
         $errors = [];
-        $campus = trim($form['campus']);
-        $building = trim($form['building']);
-        $room = trim($form['room']);
-        try {
-            $validator = new \Gini\CGI\Validator();
-            $validator
+        $campus = self::getValue(@$form['campus']);
+        $building = self::getValue(@$form['building']);
+        $room = self::getValue(@$form['room']);
+        list($cErrors, $campus, $campusName) = self::validateCampus($campus);
+        list($bErrors, $building, $buildingName) = self::validateBuilding($building, $campus);
+        list($rErrors, $room, $roomName) = self::validateRoom($room, $building);
+        $errors = array_merge($cErrors, $bErrors, $rErrors);
+		
+        return [
+            $errors, 
+            $campus, $campusName, 
+            $building, $buildingName, 
+            $room, $roomName,
+        ];
+    }
+	
+    private static function validateSets()
+    {
+        $errors = [];
+        $codes = [];
+        $names = [];
+
+        $args = func_get_args();
+        if (count($args)<2) return;
+        $type = array_shift($args);
+        $method = "validate{$type}";
+        list($sets, $pas) = $args;
+        $pas = (array)$pas;
+        foreach ($sets as $k=>$v) {
+            list($tError, $code, $name) = call_user_func_array([self, $method], [$v, $pas[$k]]);
+            if (!empty($tError) && $tError[$type]) {
+                $errors[(string)$type][(string)$k] = $tError[$type];
+            }
+            $codes[$k] = $code;
+            $names[$k] = $name;
+        }
+
+        return [
+            $errors,
+            $codes,
+            $names,
+        ];
+    }
+
+	
+    private static function validateCampus($campus)
+    {	   
+        if (is_array($campus)) return self::validateSets('campus', $campus);
+        try{
+	        $validator = new \Gini\CGI\Validator();
+    	    $validator
                 ->validate('campus', function() use($campus, &$campusName) {
                     try {
                         $campuses = \Gini\Gapper\Auth\Gateway::getCampuses();
-                        if (empty($campuses)) {
+       	                if (empty($campuses)) {
                             throw new \Exception();
                         }
                         foreach ($campuses as $c) {
@@ -104,14 +157,33 @@ class GatewayLocation extends \Gini\Controller\CGI
                                 return true;
                             }
                         }
-                    }
+                    } 
                     catch (\Exception $e) {
-                    }
+                        return false;
+                    } 
                 }, T('请选择校区'))
+                ->done();
+        } catch (\Gini\CGI\Validator\Exception $e) {
+            $errors = (array)$validator->errors();
+        }
+
+        return [
+            $errors,
+            $campus,
+            $campusName,
+        ];
+    }
+	
+    private static function validateBuilding($building, $campus)
+    {	
+        if (is_array($building)) return self::validateSets('building', $building, $campus);
+        try{
+	        $validator = new \Gini\CGI\Validator();
+            $validator
                 ->validate('building', function() use($campus, $building, &$buildingName) {
                     try {
                         $buildings = \Gini\Gapper\Auth\Gateway::getBuildings(['campus'=>$campus]);
-                        if (empty($buildings)) {
+       	                if (empty($buildings)) {
                             throw new \Exception();
                         }
                         foreach ($buildings as $b) {
@@ -120,39 +192,54 @@ class GatewayLocation extends \Gini\Controller\CGI
                                 return true;
                             }
                         }
-                    }
+                    } 
                     catch (\Exception $e) {
+                        return false;
                     }
                 }, T('请选择楼宇'))
-                ->validate('room', function() use($building, $room, &$roomName) {
+                ->done();
+        } catch (\Gini\CGI\Validator\Exception $e) {
+             $errors = (array)$validator->errors();
+        } 
+        return [
+            $errors,
+            $building,
+            $buildingName,
+        ];
+    }
+
+    private static function validateRoom($room, $building)
+    {	
+        if (is_array($room)) return self::validateSets('room', $room, $building);
+        try{
+	        $validator = new \Gini\CGI\Validator();
+    	    $validator
+    	        ->validate('room', function() use($building, $room, &$roomName) {
                     try {
                         $rooms = \Gini\Gapper\Auth\Gateway::getRooms(['building'=>$building]);
                         if (empty($rooms)) {
-                            $roomName = $room;
-                            return true;
+                            throw new \Exception();
                         }
-                        foreach ($rooms as $rid=>$r) {
+                        foreach ($rooms as $rid => $r) {
                             if ($rid==$room) {
                                 $roomName = $r['name'];
                                 return true;
                             }
-                        }
-                    }
+              	        }
+                    } 
                     catch (\Exception $e) {
                         return false;
                     }
-                    return true;
                 }, T('请选择房间'))
                 ->done();
         } catch (\Gini\CGI\Validator\Exception $e) {
             $errors = (array)$validator->errors();
         }
+
         return [
-            $errors, 
-            $campus, $campusName, 
-            $building, $buildingName, 
-            $room, $roomName,
+            $errors,
+            $room,
+            $roomName,
         ];
     }
-
 }
