@@ -100,7 +100,7 @@ class GatewayLocation extends \Gini\Controller\CGI
         list($cErrors, $campus, $campusName) = self::validateCampus($campus);
         list($bErrors, $building, $buildingName) = self::validateBuilding($building, $campus);
         list($rErrors, $room, $roomName) = self::validateRoom($room, $building);
-        $errors = array_merge((array)$cErrors, (array)$bErrors, (array)$rErrors);
+        $errors = array_merge($cErrors, $bErrors, $rErrors);
 		
         return [
             $errors, 
@@ -142,6 +142,7 @@ class GatewayLocation extends \Gini\Controller\CGI
     private static function validateCampus($campus)
     {	   
         if (is_array($campus)) return self::validateSets('campus', $campus);
+        $errors = [];
         try{
 	        $validator = new \Gini\CGI\Validator();
     	    $validator
@@ -177,6 +178,7 @@ class GatewayLocation extends \Gini\Controller\CGI
     private static function validateBuilding($building, $campus)
     {	
         if (is_array($building)) return self::validateSets('building', $building, $campus);
+        $errors = [];
         try{
 	        $validator = new \Gini\CGI\Validator();
             $validator
@@ -211,6 +213,7 @@ class GatewayLocation extends \Gini\Controller\CGI
     private static function validateRoom($room, $building)
     {	
         if (is_array($room)) return self::validateSets('room', $room, $building);
+        $errors = [];
         try{
 	        $validator = new \Gini\CGI\Validator();
     	    $validator
