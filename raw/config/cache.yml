@@ -1,0 +1,10 @@
+---
+default:
+  driver: redis
+  options:
+    key_prefix: ${DEFAULT_REDIS_KEY_PREFIX}
+    servers:
+      default:
+        host: ${DEFAULT_REDIS_HOST}
+        port: ${DEFAULT_REDIS_PORT}
+...
