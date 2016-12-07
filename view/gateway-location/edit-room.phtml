@@ -1,4 +1,7 @@
-<div class="form-group<?=$errors['room'] ? ' has-error' : ''?>">
+<?php 
+	$vError = is_null($multiKey) ? $errors['room'] : $errors['room'][$multiKey];
+?>
+<div class="form-group<?=$vError ? ' has-error' : ''?>">
     <div>
         <?php if (empty($rooms)) { ?>
         <input type="text" class="form-control" name="<?=is_null($multiKey)?'room':"room[{$multiKey}]"?>" value="<?=H($selected)?>" />
@@ -10,4 +13,7 @@
         </select>
         <?php }?>
     </div>
+	<?php if ($vError) {?>
+	<div class="text-right text-danger"><?=H($vError)?></div>
+	<?php }?>
 </div>
