@@ -221,7 +221,7 @@ class GatewayLocation extends \Gini\Controller\CGI
                     try {
                         $rooms = \Gini\Gapper\Auth\Gateway::getRooms(['building'=>$building]);
                         if (empty($rooms)) {
-                            throw new \Exception();
+                            return true;
                         }
                         foreach ($rooms as $rid => $r) {
                             if ($rid==$room) {
