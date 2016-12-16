@@ -6,14 +6,15 @@ class GatewayLocation extends \Gini\Controller\CGI
 {
     private static $multiKey = null;
 
-public function actionGetSubCampus()
-{
-    $form = $this->form('get');
-    $campus = $form['campus'];
-    $building = $form['building'];
-    $room = $room['room'];
-    return \Gini\IoC::construct('\Gini\CGI\Response\JSON', (string)self::getLocationCampus($campus, $building, $room));
-}
+    public function actionGetCampuses()
+    {
+        $form = $this->form('get');
+        $campus = $form['campus'];
+        $building = $form['building'];
+        $room = $room['room'];
+        return \Gini\IoC::construct('\Gini\CGI\Response\JSON', (string)self::getLocationCampus($campus, $building, $room));
+    }
+
     public function actionGetSubBuildings()
     {
         $form = $this->form('get');
