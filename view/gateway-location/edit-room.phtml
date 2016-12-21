@@ -4,7 +4,7 @@
 <div class="form-group<?=$vError ? ' has-error' : ''?>">
     <div>
         <?php if (empty($rooms)) { ?>
-        <input type="text" class="form-control" name="<?=is_null($multiKey)?'room':"room[{$multiKey}]"?>" value="<?=H($selected)?>" />
+        <input type="text" class="form-control" name="<?=is_null($multiKey)?'room':"room[{$multiKey}]"?>" value="<?=H($selected)?>" placeholder="<?= H(T('请填写房间号'))?>" />
         <?php } else { ?>
         <select name="<?=is_null($multiKey)?'room':"room[{$multiKey}]"?>" class="form-control">
             <?php foreach ($rooms as $vID=>$vRoom) {?>
