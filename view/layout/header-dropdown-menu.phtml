@@ -1,0 +1,33 @@
+<ul role="menu" class="dropdown-menu">
+<?php
+$i = 0;
+$menu = array_map(function($v) use (&$i) { 
+    $v['@weight'] = $v['@weight'] ?: $i; return $v; }, (array)$menu);
+uasort($menu, function($a, $b){
+    return ($a['@weight'] < $b['@weight']) ? -1 : 1;
+});
+
+$menu_output = [];
+foreach ((array)$menu as $menu_item) {
+    $i = 0;
+    $submenu = array_filter((array) $menu_item, function($k) {return $k[0]!='@';}, ARRAY_FILTER_USE_KEY);
+    $submenu = array_map(function($v) use (&$i) { 
+                $v['@weight'] = $v['@weight'] ?: $i; return $v; }, $submenu);
+    uasort($submenu, function($a, $b){
+        return ($a['@weight'] < $b['@weight']) ? -1 : 1;
+    });
+
+    $submenu_output = '';
+    foreach ($submenu as &$item) {
+        $submenu_output .= strtr('<li role="presentation"><a href="{url}" role="menuitem">{title}</a></li>', [
+            '{url}' => H($item['@url']),
+            '{title}' => H($item['@title']),
+        ]);
+    }
+    
+    $menu_output[] = $submenu_output;
+ } 
+ 
+ echo implode('<li role="presentation" class="divider"></li>', $menu_output);
+ ?>
+</ul>

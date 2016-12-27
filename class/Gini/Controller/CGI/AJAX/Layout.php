@@ -6,8 +6,12 @@ class Layout extends \Gini\Controller\CGI
 {
     public function actionHeader()
     {
+        $top_menu = new \ArrayObject();
+        \Gini\Event::trigger('header.top-menu', $top_menu);
+
         $vars = [
             'route' => $this->env['route'],
+            'top_menu' => $top_menu,
         ];
 
         return \Gini\IoC::construct('\Gini\CGI\Response\HTML', V('layout/header', $vars));

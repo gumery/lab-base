@@ -1,4 +1,10 @@
 <?php
+$checkActive = function($routeChecking) use($route) {
+    if (0 == strncmp($routeChecking, $route, strlen($routeChecking))) {
+        return ' class="active"';
+    }
+};
+
 $me = _G('ME');
 ?>
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -10,19 +16,53 @@ $me = _G('ME');
                         <?= H(T(\Gini\Config::get('app.title')))?>
                     </a>
                 </li>
+                <li<?= $checkActive('help')?>>
+                    <a href="help"><?= H(T('用户帮助')) ?></a>
+                </li>
             </ul>
-            <ul class="nav navbar-nav navbar-right" style="position:relative">
-                <?php if($me->id) {?>
-                        <li role="presentation">
-                            <a href="logout" tabindex="-1" role="menuitem"><?= H(T('登出系统'))?></a>
+
+            <ul class="nav navbar-nav navbar-right" style="position:relative" data-require="payment/pay">
+                <?php if($me->id) { ?>
+                    <?php
+                    $i = 0;
+                    $top_menu = array_map(function($v) use (&$i) { 
+                        $v['@weight'] = $v['@weight'] ?: $i; return $v; }, (array)$top_menu);
+                    uasort($top_menu, function($a, $b){
+                        return ($a['@weight'] < $b['@weight']) ? -1 : 1;
+                    });
+                    foreach ($top_menu as $key => $item) {
+                        if ($item['@url']) { ?>
+                        <li id="top-menu-<?= H($key) ?>" <?= $checkActive($item['@route'] ?: $key)?>>
+                            <a href="<?= H($item['@url']) ?>">
+                                <i class="fa fa-fw fa-lg fa-<?= $item['@icon'] ?>"></i>
+                                <sup><strong class="text-primary top-menu-number-<?= H($key) ?>"><?= H($item['@number'])?></strong></sup>
+                            </a>
                         </li>
+                        <?php } else { ?>
+                        <li id="top-menu-<?= H($key) ?>" <?= $checkActive($item['@route'] ?: $key)?> class="dropdown">
+                            <a data-toggle="dropdown"><i class="fa fa-fw fa-lg fa-<?= $item['@icon'] ?>"></i></a>
+                            <?php 
+                            $menu = array_filter($item, function($k) {return $k[0]!='@';}, ARRAY_FILTER_USE_KEY); 
+                            if (count($menu) > 0) { ?>
+                                <?= V('layout/header-dropdown-menu', ['menu'=>$menu])?>
+                            <?php } ?>
+                        </li>
+                        <?php } ?>
+                    <?php } ?>
                 <?php } else { ?>
                     <li role="presentation">
-                        <a href="login" tabindex="-1" role="menuitem"><?= H(T('登录'))?></a>
+                        <a href="gapper/client/login" tabindex="-1" role="menuitem"><?= H(T('登录'))?></a>
                     </li>
                 <?php }?>
             </ul>
         </div>
     </div>
 </nav>
-
+<script data-ajax="true">
+require(['jquery'], function(){
+    $('#header nav').on('click', '[data-toggle="popover"]', function(){
+        $(this).siblings('.popover').toggle();
+        return false;
+    });
+});
+</script>
