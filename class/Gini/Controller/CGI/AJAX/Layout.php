@@ -32,11 +32,12 @@ class Layout extends \Gini\Controller\CGI
             }
             unset($apps[$clientID]);
         }
-        uasort($apps, function($a, $b) {
-            $ra = $a['rate'];
-            $rb = $b['rate'];
-            if ($ra==$rb) return 0;
-            return ($ra>$rb) ? -1 : 1;
+
+        $i = 0;
+        $apps = array_map(function($v) use (&$i) { 
+            $v['weight'] = $v['weight'] ?: $i; $i++; return $v; }, (array)$apps);
+        uasort($apps, function($a, $b){
+            return ($a['weight'] < $b['weight']) ? -1 : 1;
         });
 
         $vars = [

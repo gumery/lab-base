@@ -26,7 +26,7 @@ $me = _G('ME');
                     <?php
                     $i = 0;
                     $top_menu = array_map(function($v) use (&$i) { 
-                        $v['@weight'] = $v['@weight'] ?: $i; return $v; }, (array)$top_menu);
+                        $v['@weight'] = $v['@weight'] ?: $i; $i++; return $v; }, (array)$top_menu);
                     uasort($top_menu, function($a, $b){
                         return ($a['@weight'] < $b['@weight']) ? -1 : 1;
                     });
