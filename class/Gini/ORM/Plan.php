@@ -44,6 +44,8 @@ class Plan extends Object
     // 被驳回
     const STATUS_REJECTED = 3;
 
+    const APPLICATION_RESEARCH = 0;
+    const APPLICATION_TEACHING = 1;
     public static function getStatus()
     {
         return [
@@ -54,4 +56,11 @@ class Plan extends Object
         ];
     }
 
+    public static function getApplications()
+    {
+        return [
+            self::APPLICATION_RESEARCH => T('科研'),
+            self::APPLICATION_TEACHING => T('教学'),
+        ];
+    }
 }
