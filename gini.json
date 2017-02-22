@@ -4,6 +4,7 @@
     "description": "Lab Base",
     "version": "0.1.16",
     "dependencies": {
+        "app-base": "*",
         "gapper": "*",
         "locale": "*",
         "gini": "*"
