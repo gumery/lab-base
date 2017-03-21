@@ -31,7 +31,7 @@ class GatewayLocation extends \Gini\Controller\CGI
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', (string)self::getLocationRoom($code));
     }
 
-    public static function getLocationCampus($campusCode, $buildingCode, $roomCode, array $form=[], $errors=null, $multiKey=null)
+    public static function getLocationCampus($campusCode, $buildingCode, $roomName, array $form=[], $errors=null, $multiKey=null)
     {
         self::$multiKey = $multiKey;
         try {
@@ -49,12 +49,12 @@ class GatewayLocation extends \Gini\Controller\CGI
             'selected'=> $cid,
             'multiKey'=> self::$multiKey,
             'campuses'=> $campuses,
-            'building'=> (string)self::getLocationBuilding($cid, $buildingCode, $roomCode, $form, $errors),
+            'building'=> (string)self::getLocationBuilding($cid, $buildingCode, $roomName, $form, $errors),
             'errors'=> $errors,
         ]);
     }
 
-    public static function getLocationBuilding($campusCode, $buildingCode=null, $roomCode=null, array $form=[], $errors=null)
+    public static function getLocationBuilding($campusCode, $buildingCode=null, $roomName=null, array $form=[], $errors=null)
     {
         try {
             $buildings = \Gini\Gapper\Auth\Gateway::getBuildings(['campus'=>$campusCode]);
@@ -71,12 +71,12 @@ class GatewayLocation extends \Gini\Controller\CGI
             'selected'=> $bid,
             'multiKey'=> self::$multiKey,
             'buildings'=> $buildings,
-            'room'=> (string)self::getLocationRoom($bid, $roomCode, $form, $errors),
+            'room'=> (string)self::getLocationRoom($bid, $roomName, $form, $errors),
             'errors'=> $errors,
         ]);
     }
 
-    public static function getLocationRoom($buildingCode, $roomCode=null, array $form=[], $errors=null)
+    public static function getLocationRoom($buildingCode, $roomName=null, array $form=[], $errors=null)
     {
         try {
             $rooms = \Gini\Gapper\Auth\Gateway::getRooms(['building'=>$buildingCode]);
@@ -84,7 +84,7 @@ class GatewayLocation extends \Gini\Controller\CGI
         catch (\Exception $e) {
             return V('gateway-location/edit-room-warn');
         }
-        $rid = (!is_null(self::$multiKey) ? $form['room'][$multiKey] : $form['room']) ?: ($roomCode?:current($rooms)['name']);
+        $rid = (!is_null(self::$multiKey) ? $form['room'][$multiKey] : $form['room']) ?: ($roomName?:current($rooms)['name']);
         return V('gateway-location/edit-room', [
             'selected'=> $rid,
             'multiKey'=> self::$multiKey,
@@ -235,8 +235,8 @@ class GatewayLocation extends \Gini\Controller\CGI
                             $roomName = $room;
                             return true;
                         }
-                        foreach ($rooms as $rid => $r) {
-                            if ($rid==$room) {
+                        foreach ($rooms as $r) {
+                            if ($r['name']==$room) {
                                 $roomName = $r['name'];
                                 return true;
                             }
