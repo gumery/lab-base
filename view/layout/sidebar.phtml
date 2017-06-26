@@ -41,6 +41,7 @@ $group = _G('GROUP');
 <?php 
 $vShowQRCode = \Gini\Config::get('app.show_sidebar_qrcode');
 $vShowSPhone = \Gini\Config::get('app.show_sidebar_service_phone');
+$vShowSPhoneHint = \Gini\Config::get('app.show_sidebar_service_phone_hint');//天津科技大学要求客服热线字体方法加提示语
 $vShowQRCode = is_bool($vShowQRCode) ? $vShowQRCode : true;
 $vShowSPhone = is_bool($vShowSPhone) ? $vShowSPhone : true;
 if ($vShowQRCode || $vShowSPhone) {
@@ -53,7 +54,10 @@ if ($vShowQRCode || $vShowSPhone) {
     <?php }?>
     <?php if ($vShowSPhone) {?>
     <div class="text-center phone-no">
-        <strong class="text-primary"><i class="fa fa-fw fa-phone"></i><?=H(\Gini\Config::get('app.service_phone')?:'400-843-6255')?></strong>
+        <?php if ($vShowSPhoneHint === true) { ?>
+        <strong class="text-primary" style="display:block;font-size:15px;"><?= H(T('技术支持电话')) ?></strong>
+        <?php } ?>
+        <strong class="text-primary" <?php if ($vShowSPhoneHint === true) { ?> style="font-size:15px;" <?php } ?>><i class="fa fa-fw fa-phone"></i><?=H(\Gini\Config::get('app.service_phone')?:'400-843-6255')?></strong>
     </div>
     <?php }?>
 </div>

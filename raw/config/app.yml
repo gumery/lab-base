@@ -1,4 +1,5 @@
 ---
 show_sidebar_qrcode: ${SHOW_SIDEBAR_QRCODE}
 show_sidebar_service_phone: ${SHOW_SIDEBAR_SERVICE_PHONE}
+show_sidebar_service_phone_hint: ${SHOW_SIDEBAR_SERVICE_PHONE_HINT}
 ...
