@@ -22,6 +22,7 @@ define('plugin/edit/gateway-location', ['jquery', 'bootstrap', 'bootbox'], funct
             $myContainer.html(result);
             var $pm = $myContainer.parents('.modal');
             $pm.length && $pm.modal('handleUpdate');
+            $('.selectpicker').selectpicker('refresh');
         });
     });
 });
