@@ -1,4 +1,4 @@
-define('plugin/edit/gateway-location', ['jquery', 'bootstrap', 'bootbox'], function($, Bootstrap, Bootbox) {
+define('plugin/edit/gateway-location', ['jquery', 'bootstrap', 'bootbox', 'bootstrap-select'], function($, Bootstrap, Bootbox, BootSelect) {
     $('body').on('change', '.app-location-select-courier', function() {
         var $that = $(this);
         var kk = $that.attr('name');
@@ -25,4 +25,5 @@ define('plugin/edit/gateway-location', ['jquery', 'bootstrap', 'bootbox'], funct
             $('.selectpicker').selectpicker('refresh');
         });
     });
+    $('.selectpicker').selectpicker();
 });
