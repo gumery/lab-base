@@ -6,7 +6,10 @@
         <?php if (empty($rooms)) { ?>
         <input type="text" class="form-control" name="<?=is_null($multiKey)?'room':"room[{$multiKey}]"?>" value="<?=H($selected)?>" placeholder="<?= H(T('请填写房间号'))?>" />
         <?php } else { ?>
-        <select name="<?=is_null($multiKey)?'room':"room[{$multiKey}]"?>" class="form-control">
+        <select name="<?=is_null($multiKey)?'room':"room[{$multiKey}]"?>" 
+        class="selectpicker form-control"
+        data-live-search="true"
+        >
             <?php foreach ($rooms as $vRoom) {?>
             <option value="<?=H($vRoom['name'])?>"<?=$vRoom['name']==$selected?' selected="selected"':''?>><?=H($vRoom['name'])?></option>
             <?php }?>
