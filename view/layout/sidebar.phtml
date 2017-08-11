@@ -55,9 +55,11 @@ if ($vShowQRCode || $vShowSPhone) {
     <?php if ($vShowSPhone) {?>
     <div class="text-center phone-no">
         <?php if ($vShowSPhoneHint === true) { ?>
-        <strong class="text-primary" style="display:block;font-size:15px;"><?= H(T('技术支持电话')) ?></strong>
+        <strong class="text-primary" style="display:block;font-size:14px;"><?= H(T('技术支持电话')) ?></strong>
         <?php } ?>
-        <strong class="text-primary" <?php if ($vShowSPhoneHint === true) { ?> style="font-size:15px;" <?php } ?>><i class="fa fa-fw fa-phone"></i><?=H(\Gini\Config::get('app.service_phone')?:'400-843-6255')?></strong>
+        <strong class="text-primary" <?php if ($vShowSPhoneHint === true) { ?> style="font-size:13px;" <?php } ?>>
+        <i class="fa fa-fw fa-phone" <?php if ($vShowSPhoneHint === true) { ?> style="display:none;"<?php } ?>></i>
+        <?=H(\Gini\Config::get('app.service_phone')?:'400-843-6255')?></strong>
     </div>
     <?php }?>
 </div>
