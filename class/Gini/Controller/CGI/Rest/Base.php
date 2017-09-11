@@ -78,7 +78,7 @@ class Base extends \Gini\Controller\REST
         $client_id = $config['client_id'];
         $client_secret = $config['client_secret'];
         $cacheKey = "app#client#{$client_id}#session_id";
-        $token = self::cache($cacheKey);
+        $token = self::_cache($cacheKey);
         $rpc = \Gini\IoC::construct('\Gini\RPC', $api);
         if ($token) {
             $rpc->setHeader(['X-Gini-Session' => $token]);
