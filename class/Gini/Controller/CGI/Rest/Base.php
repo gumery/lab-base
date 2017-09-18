@@ -166,7 +166,7 @@ class Base extends \Gini\Controller\REST
 
 
             // 获取顶部菜单可显示选项
-            \Gini\Event::trigger('header.items', $items);
+            $items =  \Gini\Event::trigger('header.items');
             $data['message'] = [
                 'isShow' => $items['message'] ? true : false,
                 'count'  => $items['message'] ?: 0
