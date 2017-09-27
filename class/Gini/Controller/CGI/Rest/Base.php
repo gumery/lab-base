@@ -16,10 +16,6 @@ class Base extends \Gini\Controller\REST
 
     function __preAction($action, &$params)
     {
-        // 验证用户 是不是需要做缓存，还得考虑考虑
-		$token = $_SERVER['HTTP_X_GINI_SESSION'];
-        $this->_verify($token);
-
         // 获取 form
         $this->method = strtolower($this->env['method']);
         switch ($this->method) {
@@ -59,51 +55,6 @@ class Base extends \Gini\Controller\REST
         }
 
         return $response;
-    }
-
-    private function _verify($token)
-	{
-		$conf = \Gini\Config::get('gapper.rpc');
-        $rpc = self::getRPC();
-        if ($rpc) {
-			\Gini\Gapper\Client::loginByToken($token);
-		}
-	}
-
-    private static $_RPC;
-    public static function getRPC()
-    {
-        if (self::$_RPC) return self::$_RPC;
-
-        $config = (array) \Gini\Config::get('gapper.rpc');
-        $api = $config['url'];
-        $client_id = $config['client_id'];
-        $client_secret = $config['client_secret'];
-        $cacheKey = "app#client#{$client_id}#session_id";
-        $token = self::_cache($cacheKey);
-        $rpc = \Gini\IoC::construct('\Gini\RPC', $api);
-        if ($token) {
-            $rpc->setHeader(['X-Gini-Session' => $token]);
-        } else {
-            $token = $rpc->gapper->app->authorize($client_id, $client_secret);
-            if (!$token) {
-                \Gini\Logger::of('gapper')->error('Your app was not registered in gapper server!');
-            } else {
-                self::_cache($cacheKey, $token, 600);
-                self::$_RPC = $rpc;
-            }
-        }
-
-        return $rpc;
-    }
-
-    // 缓存设置
-    private static function _cache($key, $value=false, $ttl=300) {
-        $cacher = \Gini\Cache::of('gapper');
-        if (false === $value) {
-            return $cacher->get($key);
-        }
-        $cacher->set($key, $value, $ttl);
     }
 
     // lab-* 应用 侧边栏顶边栏信息获取接口
