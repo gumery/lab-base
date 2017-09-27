@@ -1,0 +1,26 @@
+---
+subs:
+  ${LAB_ORDERS_GAPPER_ID}:
+    - title: 我要采购
+      icon: shopping-cart
+      url: ${LAB_ORDERS_URL}/home
+    - title: 订单列表
+      icon: list-ul
+      url: ${LAB_ORDERS_URL}/order/history
+    - title: 付款列表
+      icon: credit-card
+      url: ${LAB_ORDERS_URL}/payment/history
+  ${LAB_INVENTORY_GAPPER_ID}:
+    - title: 存货列表
+      icon: list-ul
+      url: ${LAB_INVENTORY_URL}/home
+    - title: 位置管理
+      icon: unlock-alt
+      url: ${LAB_INVENTORY_URL}/storage/list
+    - title: 试剂调剂
+      icon: share-alt
+      url: ${LAB_INVENTORY_URL}/dispense/list
+link:
+  title: ${HOME_APP_TITLE}
+  url: ${HOME_URL}
+...
