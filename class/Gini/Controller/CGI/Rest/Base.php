@@ -80,11 +80,12 @@ class Base extends \Gini\Controller\REST
             // 设置侧边栏
             $bar = [];
             foreach ($groupApps as $clientID => $app) {
+                $shortURL = self::_getModuleURL($app['module_name']);
                 // 设置 nav
                 $bar = [
                     'icon'          => $app['font_icon'],
                     'title'         => $app['short_title'] ?: $app['title'],
-                    'url'           => ($clientID === $currentID) ? '/' : $app['url'],
+                    'url'           => $shortURL ?: (($clientID === $currentID) ? '/' : $app['url']),
                     'is_selected'   => ($clientID === $currentID) ? true : false,
                     'sub'           => []
                 ];
@@ -125,7 +126,8 @@ class Base extends \Gini\Controller\REST
 
             $data['cart'] = [
                 'isShow' => $items['cart'] ? true : false,
-                'count'  => $items['cart'] ?: 0
+                'count'  => $items['cart'] ?: 0,
+                'add_customized_url' => \Gini\URI::base().'cart/customized'
             ];
 
             $data['help'] = [
@@ -163,5 +165,13 @@ class Base extends \Gini\Controller\REST
 
         $response = $this->response(200, null, $data);
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', $response);
+    }
+
+    private static function _getModuleURL($module)
+    {
+        $mtps = (array) \Gini\Config::get('sidebar.module-to-path');
+        if (isset($mtps[$module]) && $mtps[$module]) {
+            return "/{$mtps[$module]}";
+        }
     }
 }

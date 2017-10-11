@@ -20,6 +20,8 @@ subs:
     - title: 试剂调剂
       icon: share-alt
       url: ${LAB_INVENTORY_URL}/dispense/list
+module-to-path:
+  lab-waste-cylinder: cylinders
 link:
   title: ${HOME_APP_TITLE}
   url: ${HOME_URL}
