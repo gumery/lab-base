@@ -75,6 +75,14 @@ class Base extends \Gini\Controller\REST
             // 获取 有二级菜单的 nav, 拿到所有有二级菜单的 gapper_id
             $subs = $info['subs'] ?: [];
 
+            foreach($subs as $client_id => $sub) {
+                foreach($sub as $id => $item) {
+                    if($client_id != $currentID){
+                        $subs[$client_id][$id]['url'] .= "/gapper/client/go/{$clientID}/{$group->id}";
+                    }
+                }
+            }
+
             // 获取该课题组的所有应用
             $groupApps = (array) $group->getApps();
             // 设置侧边栏
