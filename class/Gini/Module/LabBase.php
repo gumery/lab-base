@@ -15,6 +15,11 @@ class LabBase
             return;
         }
 
+        $myHost = $_SERVER['HTTP_HOST'];
+        $uri = parse_url($feURL);
+        $toHost = $uri['host'];
+        if ($myHost==$toHost) return;
+
         $me = _G('ME');
         if ($me->id) {
             $clientID = \Gini\Config::get('app.lab-fe-app-client-id');
