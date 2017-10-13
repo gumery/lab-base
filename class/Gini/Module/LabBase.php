@@ -8,7 +8,7 @@ class LabBase
     {
     }
 
-    public static function getFEUrl($path)
+    public static function getFEUrl($path, $force = false)
     {
         $feURL = \Gini\Config::get('app.lab-fe-url');
         if (!$feURL || $feURL=='${LAB_FE_URL}') {
@@ -19,6 +19,8 @@ class LabBase
         $uri = parse_url($feURL);
         $toHost = $uri['host'];
         if ($myHost==$toHost) return;
+
+        if ($force) return "{$feURL}/{$path}";
 
         $me = _G('ME');
         if ($me->id) {
