@@ -78,7 +78,7 @@ class Base extends \Gini\Controller\REST
             foreach($subs as $client_id => $sub) {
                 foreach($sub as $id => $item) {
                     if($client_id != $currentID){
-                        $subs[$client_id][$id]['url'] .= "/gapper/client/go/{$clientID}/{$group->id}";
+                        $subs[$client_id][$id]['url'] .= "/gapper/client/go/{$client_id}/{$group->id}";
                     }
                 }
             }
