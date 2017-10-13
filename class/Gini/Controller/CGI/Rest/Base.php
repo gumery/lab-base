@@ -85,7 +85,7 @@ class Base extends \Gini\Controller\REST
                 $bar = [
                     'icon'          => $app['font_icon'],
                     'title'         => $app['short_title'] ?: $app['title'],
-                    'url'           => $shortURL ?: (($clientID === $currentID) ? '/' : $app['url']),
+                    'url'           => $shortURL ?: (($clientID===$currentID) ? '/' : "/gapper/client/go/{$clientID}/{$group->id}"),
                     'is_selected'   => ($clientID === $currentID) ? true : false,
                     'sub'           => []
                 ];
