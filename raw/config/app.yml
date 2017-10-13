@@ -6,4 +6,5 @@ show_sidebar_service_phone_hint: ${SHOW_SIDEBAR_SERVICE_PHONE_HINT}
 # 由于历史没有 lab.NODE.labmai.com 的机制，现在要增加这个机制。
 # 因为不能排除有人就是通过url这么访问labmai服务的
 lab-fe-url: ${LAB_FE_URL}
+lab-fe-app-client-id: ${LAB_ORDERS_GAPPER_ID}
 ...
