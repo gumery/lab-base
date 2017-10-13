@@ -24,7 +24,7 @@ class LabBase
                 $url = \Gini\URI::url($feURL, [
                     'gapper-token'=> $gapperToken,
                     'gapper-group'=> $group->id,
-                    'redirect'=> $path
+                    'redirect'=> "{$feURL}/{$path}"
                 ]);
             }
         } else {
