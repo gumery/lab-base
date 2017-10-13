@@ -15,19 +15,21 @@ class LabBase
             return;
         }
 
-        $url = "{$feURL}/{$path}";
-
         $me = _G('ME');
         if ($me->id) {
             $clientID = \Gini\Config::get('app.lab-fe-app-client-id');
             $gapperToken = \Gini\Gapper\Client::getLoginToken($clientID);
             if ($gapperToken) {
                 $group = _G('GROUP');
-                $url = \Gini\URI::url($url, [
+                $url = \Gini\URI::url($feURL, [
                     'gapper-token'=> $gapperToken,
-                    'gapper-group'=> $group->id
+                    'gapper-group'=> $group->id,
+                    'redirect'=> $path
                 ]);
             }
+        } else {
+            $url = "{$feURL}/{$path}";
+
         }
 
         return $url;
