@@ -183,7 +183,7 @@ class Base extends \Gini\Controller\REST
         $group = _G('GROUP');
         $result = "/gapper/client/go/{$clientID}/{$group->id}";
         return \Gini\URI::url($result, [
-            'redirect'=> $uri['path'] ?: '/'
+            'redirect'=> $url ?: '/'
         ]);
     }
 
