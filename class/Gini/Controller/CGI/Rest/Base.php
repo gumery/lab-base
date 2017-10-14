@@ -66,6 +66,8 @@ class Base extends \Gini\Controller\REST
         // 获取显示信息
         $info = \Gini\Config::get('sidebar') ?: [];
 
+        $appInfo = \Gini\Gapper\Client::getInfo();
+
         //是否登录
         $isLogin = (!$me->id || !$group->id) ? false : true;
         if ($isLogin) {
@@ -133,7 +135,7 @@ class Base extends \Gini\Controller\REST
             $data['cart'] = [
                 'isShow' => $items['cart'] ? true : false,
                 'count'  => $items['cart'] ?: 0,
-                'add_customized_url' => \Gini\URI::base().'cart/customized'
+                'add_customized_url' => "{$appInfo['url']}/cart/customized"
             ];
 
             $data['help'] = [
@@ -148,7 +150,7 @@ class Base extends \Gini\Controller\REST
         $data['is_login'] = [
             'status' => $isLogin,
             'redirect' => true,
-            'url'    => $isLogin ? '' : \Gini\URI::base() . 'gapper/client/login'
+            'url'    => $isLogin ? '' : "{$appInfo['url']}/gapper/client/login"
         ];
 
         // 商城信息
@@ -160,7 +162,7 @@ class Base extends \Gini\Controller\REST
         // 二维码是否显示
         $showQRCode = \Gini\Config::get('app.show_sidebar_qrcode');
         if ($showQRCode) {
-            $data['qrcode_img'] = \Gini\URI::base() . 'assets/img/sidebar-code.png' ?: '';
+            $data['qrcode_img'] = "{$appInfo['url']}/assets/img/sidebar-code.png";
         }
 
         // 客服电话是否显示
