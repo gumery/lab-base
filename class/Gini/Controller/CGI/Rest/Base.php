@@ -79,7 +79,7 @@ class Base extends \Gini\Controller\REST
 
             foreach($subs as $client_id => $sub) {
                 foreach($sub as $id => $item) {
-                    $subs[$client_id][$id]['url'] .= self::_getFEURL($item['url'], $client_id);
+                    $subs[$client_id][$id]['url'] = self::_getFEURL($item['url'], $client_id);
                 }
             }
 
