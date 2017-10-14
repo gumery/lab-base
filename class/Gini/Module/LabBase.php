@@ -28,7 +28,7 @@ class LabBase
             $gapperToken = \Gini\Gapper\Client::getLoginToken($clientID);
             if ($gapperToken) {
                 $group = _G('GROUP');
-                $url = \Gini\URI::url($feURL, [
+                $url = \Gini\URI::url($feURL."/gapper/client/login", [
                     'gapper-token'=> $gapperToken,
                     'gapper-group'=> $group->id,
                     'redirect'=> "{$feURL}/{$path}"
