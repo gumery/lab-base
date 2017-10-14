@@ -15,7 +15,8 @@ class LabBase
             return;
         }
 
-        $myHost = $_SERVER['HTTP_HOST'];
+        $mui = parse_url($_SERVER['HTTP_HOST']);
+        $myHost = $mui['host'];
         $uri = parse_url($feURL);
         $toHost = $uri['host'];
         if ($myHost==$toHost) return;
