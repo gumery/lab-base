@@ -150,7 +150,7 @@ class Base extends \Gini\Controller\REST
         $data['is_login'] = [
             'status' => $isLogin,
             'redirect' => true,
-            'url'    => $isLogin ? '' : "{$appInfo['url']}/gapper/client/login"
+            'url'    => $isLogin ? '' : "/gapper/client/login"
         ];
 
         // 商城信息
