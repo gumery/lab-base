@@ -77,9 +77,7 @@ class Base extends \Gini\Controller\REST
 
             foreach($subs as $client_id => $sub) {
                 foreach($sub as $id => $item) {
-                    if($client_id != $currentID){
-                        $subs[$client_id][$id]['url'] .= "/gapper/client/go/{$client_id}/{$group->id}";
-                    }
+                    $subs[$client_id][$id]['url'] .= self::_getFEURL($item['url'], $client_id);
                 }
             }
 
@@ -173,6 +171,18 @@ class Base extends \Gini\Controller\REST
 
         $response = $this->response(200, null, $data);
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', $response);
+    }
+
+    private static function _getFEURL($url, $clientID)
+    {
+        $uri = \parse_url($url);
+        if (!isset($uri['host'])) return $url;
+        $scheme = $uri['scheme'] ?: 'http';
+        $group = _G('GROUP');
+        $result = "/gapper/client/go/{$clientID}/{$group->id}";
+        return \Gini\URI::url($result, [
+            'redirect'=> $uri['path'] ?: '/'
+        ]);
     }
 
     private static function _getModuleURL($module)

@@ -3,7 +3,8 @@ subs:
   ${LAB_ORDERS_GAPPER_ID}:
     - title: 我要采购
       icon: shopping-cart
-      url: ${LAB_ORDERS_URL}/home
+      # 每一个前端话的path，就不在需要制定域名信息了, 用path就可以了
+      url: /home
     - title: 订单列表
       icon: list-ul
       url: ${LAB_ORDERS_URL}/order/history
