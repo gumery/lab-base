@@ -1,0 +1,20 @@
+<?php
+    $vError = is_null($multiKey) ? $errors['campus'] : $errors['campus'][$multiKey];
+?>
+<div class="form-group<?=$vError ? ' has-error' : ''?> col-xs-3" style="padding-left:0px;" data-require="plugin/edit/gateway-location">
+    <div><select
+    name="<?=is_null($multiKey)?'campus':"campus[{$multiKey}]"?>"
+    class="selectpicker form-control app-location-select-courier"
+    data-live-search="true"
+    data-sub-class="content-campus-sub-buildings<?=is_null($multiKey)?'':"-{$multiKey}"?>" data-sub-url="ajax/gatewaylocation/get-sub-buildings">
+        <?php foreach ($campuses as $vCampus) {?>
+        <option value="<?=H($vCampus['code'])?>"<?=$vCampus['code']==$selected?' selected="selected"':''?>><?=H($vCampus['name'])?></option>
+        <?php }?>
+    </select></div>
+    <?php if ($vError) {?>
+    <div class="text-right text-danger"><?=H($vError)?></div>
+    <?php }?>
+</div>
+<div class="content-campus-sub-buildings<?=is_null($multiKey)?'':"-{$multiKey}"?> col-xs-6" style="padding:0px;">
+    <?=$building?>
+</div>
