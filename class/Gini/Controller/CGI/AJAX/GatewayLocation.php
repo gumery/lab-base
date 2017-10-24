@@ -32,7 +32,7 @@ class GatewayLocation extends \Gini\Controller\CGI
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', (string)self::getLocationRoom($code));
     }
 
-    public static function getLocationCampus($campusCode, $buildingCode, $roomName, array $form=[], $errors=null, $multiKey=null, $across=false)
+    public static function getLocationCampus($campusCode, $buildingCode, $roomName, array $form=[], $errors=null, $multiKey=null, $across=null)
     {
         self::$multiKey = $multiKey;
         self::$across= $across;
@@ -56,7 +56,7 @@ class GatewayLocation extends \Gini\Controller\CGI
         ]);
     }
 
-    public static function getLocationBuilding($campusCode, $buildingCode=null, $roomName=null, array $form=[], $errors=null, $across=false)
+    public static function getLocationBuilding($campusCode, $buildingCode=null, $roomName=null, array $form=[], $errors=null, $across=null)
     {
         try {
             $buildings = \Gini\Gapper\Auth\Gateway::getBuildings(['campus'=>$campusCode]);
