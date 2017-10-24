@@ -20,7 +20,8 @@ class GatewayLocation extends \Gini\Controller\CGI
     {
         $form = $this->form('get');
         $code = $form['value'];
-        self::$multiKey = $form['multiKey'];
+    self::$across = $form['across'];
+    self::$multiKey = $form['multiKey'];
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', (string)self::getLocationBuilding($code));
     }
 
@@ -28,11 +29,11 @@ class GatewayLocation extends \Gini\Controller\CGI
     {
         $form = $this->form('get');
         $code = $form['value'];
-        self::$multiKey = $form['multiKey'];
+    self::$multiKey = $form['multiKey'];
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', (string)self::getLocationRoom($code));
     }
 
-    public static function getLocationCampus($campusCode, $buildingCode, $roomName, array $form=[], $errors=null, $multiKey=null, $across=null)
+    public static function getLocationCampus($campusCode, $buildingCode, $roomName, array $form=[], $errors=null, $multiKey=null, $across=false)
     {
         self::$multiKey = $multiKey;
         self::$across= $across;
@@ -47,16 +48,17 @@ class GatewayLocation extends \Gini\Controller\CGI
         }
 
         $cid = (!is_null(self::$multiKey) ? $form['campus'][$multiKey] : $form['campus']) ?: (@$campusCode ?: current($campuses)['code']);
-        return V(self::$across ? 'gateway-location/edit-campus-across' : 'gateway-location/edit-campus', [
+    return V(self::$across ? 'gateway-location/edit-campus-across' : 'gateway-location/edit-campus', [
             'selected'=> $cid,
             'multiKey'=> self::$multiKey,
             'campuses'=> $campuses,
             'building'=> (string)self::getLocationBuilding($cid, $buildingCode, $roomName, $form, $errors),
             'errors'=> $errors,
+            'across'=> $across,
         ]);
     }
 
-    public static function getLocationBuilding($campusCode, $buildingCode=null, $roomName=null, array $form=[], $errors=null, $across=null)
+    public static function getLocationBuilding($campusCode, $buildingCode=null, $roomName=null, array $form=[], $errors=null, $across=false)
     {
         try {
             $buildings = \Gini\Gapper\Auth\Gateway::getBuildings(['campus'=>$campusCode]);
@@ -69,7 +71,7 @@ class GatewayLocation extends \Gini\Controller\CGI
         }
 
         $bid = (!is_null(self::$multiKey) ? $form['building'][$multiKey] : $form['building']) ?: ($buildingCode?:current($buildings)['code']);
-        return V(self::$across ? 'gateway-location/edit-building-across' : 'gateway-location/edit-building', [
+    return V(self::$across ? 'gateway-location/edit-building-across' : 'gateway-location/edit-building', [
             'selected'=> $bid,
             'multiKey'=> self::$multiKey,
             'buildings'=> $buildings,
@@ -161,7 +163,7 @@ class GatewayLocation extends \Gini\Controller\CGI
                 ->validate('campus', function() use($campus, &$campusName) {
                     try {
                         $campuses = \Gini\Gapper\Auth\Gateway::getCampuses();
-                        if (empty($campuses)) {
+                           if (empty($campuses)) {
                             throw new \Exception();
                         }
                         foreach ($campuses as $c) {
@@ -197,7 +199,7 @@ class GatewayLocation extends \Gini\Controller\CGI
                 ->validate('building', function() use($campus, $building, &$buildingName) {
                     try {
                         $buildings = \Gini\Gapper\Auth\Gateway::getBuildings(['campus'=>$campus]);
-                        if (empty($buildings)) {
+                           if (empty($buildings)) {
                             throw new \Exception();
                         }
                         foreach ($buildings as $b) {
@@ -213,7 +215,7 @@ class GatewayLocation extends \Gini\Controller\CGI
                 }, T('请选择楼宇'))
                 ->done();
         } catch (\Gini\CGI\Validator\Exception $e) {
-            $errors = (array)$validator->errors();
+             $errors = (array)$validator->errors();
         }
         return [
             $errors,
@@ -242,7 +244,7 @@ class GatewayLocation extends \Gini\Controller\CGI
                                 $roomName = $r['name'];
                                 return true;
                             }
-                        }
+                          }
                     }
                     catch (\Exception $e) {
                         return false;

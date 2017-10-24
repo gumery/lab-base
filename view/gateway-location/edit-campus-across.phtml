@@ -6,6 +6,7 @@
     name="<?=is_null($multiKey)?'campus':"campus[{$multiKey}]"?>"
     class="selectpicker form-control app-location-select-courier"
     data-live-search="true"
+    data-is-across="<?=$across ?: ''?>"
     data-sub-class="content-campus-sub-buildings<?=is_null($multiKey)?'':"-{$multiKey}"?>" data-sub-url="ajax/gatewaylocation/get-sub-buildings">
         <?php foreach ($campuses as $vCampus) {?>
         <option value="<?=H($vCampus['code'])?>"<?=$vCampus['code']==$selected?' selected="selected"':''?>><?=H($vCampus['name'])?></option>
