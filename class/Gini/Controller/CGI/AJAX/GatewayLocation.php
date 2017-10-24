@@ -5,6 +5,7 @@ namespace Gini\Controller\CGI\AJAX;
 class GatewayLocation extends \Gini\Controller\CGI
 {
     private static $multiKey = null;
+    private static $across = null;
 
     public function actionGetCampuses()
     {
@@ -19,7 +20,7 @@ class GatewayLocation extends \Gini\Controller\CGI
     {
         $form = $this->form('get');
         $code = $form['value'];
-		self::$multiKey = $form['multiKey'];
+        self::$multiKey = $form['multiKey'];
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', (string)self::getLocationBuilding($code));
     }
 
@@ -27,13 +28,14 @@ class GatewayLocation extends \Gini\Controller\CGI
     {
         $form = $this->form('get');
         $code = $form['value'];
-		self::$multiKey = $form['multiKey'];
+        self::$multiKey = $form['multiKey'];
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', (string)self::getLocationRoom($code));
     }
 
-    public static function getLocationCampus($campusCode, $buildingCode, $roomName, array $form=[], $errors=null, $multiKey=null)
+    public static function getLocationCampus($campusCode, $buildingCode, $roomName, array $form=[], $errors=null, $multiKey=null, $across=null)
     {
         self::$multiKey = $multiKey;
+        self::$across= $across;
         try {
             $campuses = \Gini\Gapper\Auth\Gateway::getCampuses();
             if (empty($campuses)) {
@@ -45,7 +47,7 @@ class GatewayLocation extends \Gini\Controller\CGI
         }
 
         $cid = (!is_null(self::$multiKey) ? $form['campus'][$multiKey] : $form['campus']) ?: (@$campusCode ?: current($campuses)['code']);
-        return V('gateway-location/edit-campus', [
+        return V(self::$across ? 'gateway-location/edit-campus-across' : 'gateway-location/edit-campus', [
             'selected'=> $cid,
             'multiKey'=> self::$multiKey,
             'campuses'=> $campuses,
@@ -54,7 +56,7 @@ class GatewayLocation extends \Gini\Controller\CGI
         ]);
     }
 
-    public static function getLocationBuilding($campusCode, $buildingCode=null, $roomName=null, array $form=[], $errors=null)
+    public static function getLocationBuilding($campusCode, $buildingCode=null, $roomName=null, array $form=[], $errors=null, $across=null)
     {
         try {
             $buildings = \Gini\Gapper\Auth\Gateway::getBuildings(['campus'=>$campusCode]);
@@ -67,7 +69,7 @@ class GatewayLocation extends \Gini\Controller\CGI
         }
 
         $bid = (!is_null(self::$multiKey) ? $form['building'][$multiKey] : $form['building']) ?: ($buildingCode?:current($buildings)['code']);
-        return V('gateway-location/edit-building', [
+        return V(self::$across ? 'gateway-location/edit-building-across' : 'gateway-location/edit-building', [
             'selected'=> $bid,
             'multiKey'=> self::$multiKey,
             'buildings'=> $buildings,
@@ -111,15 +113,15 @@ class GatewayLocation extends \Gini\Controller\CGI
         list($bErrors, $building, $buildingName) = self::validateBuilding($building, $campus);
         list($rErrors, $room, $roomName) = self::validateRoom($room, $building);
         $errors = array_merge($cErrors, $bErrors, $rErrors);
-		
+
         return [
-            $errors, 
-            $campus, $campusName, 
-            $building, $buildingName, 
+            $errors,
+            $campus, $campusName,
+            $building, $buildingName,
             $room, $roomName,
         ];
     }
-	
+
     private static function validateSets()
     {
         $errors = [];
@@ -148,18 +150,18 @@ class GatewayLocation extends \Gini\Controller\CGI
         ];
     }
 
-	
+
     private static function validateCampus($campus)
-    {	   
+    {
         if (is_array($campus)) return self::validateSets('campus', $campus);
         $errors = [];
         try{
-	        $validator = new \Gini\CGI\Validator();
-    	    $validator
+            $validator = new \Gini\CGI\Validator();
+            $validator
                 ->validate('campus', function() use($campus, &$campusName) {
                     try {
                         $campuses = \Gini\Gapper\Auth\Gateway::getCampuses();
-       	                if (empty($campuses)) {
+                        if (empty($campuses)) {
                             throw new \Exception();
                         }
                         foreach ($campuses as $c) {
@@ -168,10 +170,10 @@ class GatewayLocation extends \Gini\Controller\CGI
                                 return true;
                             }
                         }
-                    } 
+                    }
                     catch (\Exception $e) {
                         return false;
-                    } 
+                    }
                 }, T('请选择校区'))
                 ->done();
         } catch (\Gini\CGI\Validator\Exception $e) {
@@ -184,18 +186,18 @@ class GatewayLocation extends \Gini\Controller\CGI
             $campusName,
         ];
     }
-	
+
     private static function validateBuilding($building, $campus)
-    {	
+    {
         if (is_array($building)) return self::validateSets('building', $building, $campus);
         $errors = [];
         try{
-	        $validator = new \Gini\CGI\Validator();
+            $validator = new \Gini\CGI\Validator();
             $validator
                 ->validate('building', function() use($campus, $building, &$buildingName) {
                     try {
                         $buildings = \Gini\Gapper\Auth\Gateway::getBuildings(['campus'=>$campus]);
-       	                if (empty($buildings)) {
+                        if (empty($buildings)) {
                             throw new \Exception();
                         }
                         foreach ($buildings as $b) {
@@ -204,15 +206,15 @@ class GatewayLocation extends \Gini\Controller\CGI
                                 return true;
                             }
                         }
-                    } 
+                    }
                     catch (\Exception $e) {
                         return false;
                     }
                 }, T('请选择楼宇'))
                 ->done();
         } catch (\Gini\CGI\Validator\Exception $e) {
-             $errors = (array)$validator->errors();
-        } 
+            $errors = (array)$validator->errors();
+        }
         return [
             $errors,
             $building,
@@ -221,13 +223,13 @@ class GatewayLocation extends \Gini\Controller\CGI
     }
 
     private static function validateRoom($room, $building)
-    {	
+    {
         if (is_array($room)) return self::validateSets('room', $room, $building);
         $errors = [];
         try{
-	        $validator = new \Gini\CGI\Validator();
-    	    $validator
-    	        ->validate('room', function() use($building, $room, &$roomName) {
+            $validator = new \Gini\CGI\Validator();
+            $validator
+                ->validate('room', function() use($building, $room, &$roomName) {
                     try {
                         if (!$room) return false;
                         $rooms = \Gini\Gapper\Auth\Gateway::getRooms(['building'=>$building]);
@@ -240,8 +242,8 @@ class GatewayLocation extends \Gini\Controller\CGI
                                 $roomName = $r['name'];
                                 return true;
                             }
-              	        }
-                    } 
+                        }
+                    }
                     catch (\Exception $e) {
                         return false;
                     }
