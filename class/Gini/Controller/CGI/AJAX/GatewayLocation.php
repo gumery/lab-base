@@ -20,8 +20,8 @@ class GatewayLocation extends \Gini\Controller\CGI
     {
         $form = $this->form('get');
         $code = $form['value'];
-    self::$across = $form['across'];
-    self::$multiKey = $form['multiKey'];
+        self::$across = $form['across'];
+        self::$multiKey = $form['multiKey'];
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', (string)self::getLocationBuilding($code));
     }
 
@@ -29,7 +29,7 @@ class GatewayLocation extends \Gini\Controller\CGI
     {
         $form = $this->form('get');
         $code = $form['value'];
-    self::$multiKey = $form['multiKey'];
+        self::$multiKey = $form['multiKey'];
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', (string)self::getLocationRoom($code));
     }
 
@@ -48,7 +48,7 @@ class GatewayLocation extends \Gini\Controller\CGI
         }
 
         $cid = (!is_null(self::$multiKey) ? $form['campus'][$multiKey] : $form['campus']) ?: (@$campusCode ?: current($campuses)['code']);
-    return V(self::$across ? 'gateway-location/edit-campus-across' : 'gateway-location/edit-campus', [
+        return V(self::$across ? 'gateway-location/edit-campus-across' : 'gateway-location/edit-campus', [
             'selected'=> $cid,
             'multiKey'=> self::$multiKey,
             'campuses'=> $campuses,
@@ -71,7 +71,7 @@ class GatewayLocation extends \Gini\Controller\CGI
         }
 
         $bid = (!is_null(self::$multiKey) ? $form['building'][$multiKey] : $form['building']) ?: ($buildingCode?:current($buildings)['code']);
-    return V(self::$across ? 'gateway-location/edit-building-across' : 'gateway-location/edit-building', [
+        return V(self::$across ? 'gateway-location/edit-building-across' : 'gateway-location/edit-building', [
             'selected'=> $bid,
             'multiKey'=> self::$multiKey,
             'buildings'=> $buildings,
