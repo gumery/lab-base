@@ -37,4 +37,11 @@ define('plugin/edit/gateway-location', ['jquery', 'bootstrap', 'bootbox', 'boots
     if (!checkMobile) {
         $('.selectpicker').selectpicker();
     }
+    return {
+		loopMe: function() {
+			if (!checkMobile) {
+				$('.selectpicker').selectpicker();
+			}
+		}
+    };
 });
