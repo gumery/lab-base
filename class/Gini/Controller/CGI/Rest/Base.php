@@ -132,6 +132,10 @@ class Base extends \Gini\Controller\REST
                 'count'  => $items['message'] ?: 0
             ];
 
+            $data['bucket'] = [
+                'count' => $items['bucket'] ?: 0
+            ];
+
             $data['cart'] = [
                 'isShow' => $items['cart'] ? true : false,
                 'count'  => $items['cart'] ?: 0,
@@ -144,6 +148,9 @@ class Base extends \Gini\Controller\REST
             ];
 
             $data['set'] = $items['setMenu'];
+
+            // 获取定制的一些顶部元素
+            $data['extra_item'] = \Gini\Event::trigger('header.node-item');
         }
 
         // 登录状态
