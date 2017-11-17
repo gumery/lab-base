@@ -85,6 +85,15 @@ class Base extends \Gini\Controller\REST
 
             // 获取该课题组的所有应用
             $groupApps = (array) $group->getApps();
+
+            // 将应用按照 rate 的降序进行排列
+            uasort($groupApps, function($a, $b) {
+                $ra = $a['rate'];
+                $rb = $b['rate'];
+                if ($ra==$rb) return 0;
+                return ($ra > $rb) ? -1 : 1;
+            });
+
             // 设置侧边栏
             $bar = [];
             foreach ($groupApps as $clientID => $app) {
@@ -105,6 +114,8 @@ class Base extends \Gini\Controller\REST
 
                 $sidebar[] = $bar;
             }
+
+
             // 侧边栏
             $data['sidebar'] = $sidebar ?: [];
 
