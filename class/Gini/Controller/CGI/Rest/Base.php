@@ -148,7 +148,7 @@ class Base extends \Gini\Controller\REST
             ];
 
             $data['cart'] = [
-                'isShow' => $items['cart'] ? true : false,
+                'isShow' => true,
                 'count'  => $items['cart'] ?: 0,
                 'add_customized_url' => "{$appInfo['url']}/cart/customized"
             ];
