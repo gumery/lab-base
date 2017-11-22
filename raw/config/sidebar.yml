@@ -8,7 +8,7 @@ subs:
     - title: 订单列表
       icon: list-ul
       url: ${LAB_ORDERS_URL}/order/history
-    - title: 付款列表
+    - title: 付款管理
       icon: credit-card
       url: ${LAB_ORDERS_URL}/payment/history
   ${LAB_INVENTORY_GAPPER_ID}:
