@@ -23,22 +23,22 @@ class LabBase
 
     public static function getRedirectUrl($path, $clientID=null)
     {
-	$app = \Gini\Gapper\Client::getInfo($clientID);
+	$app = \Gini\Gapper\Client::getInfo();
 	$url = $app['url'] . "/" . ltrim($path, '/');
+        $clientID = $clientID?:\Gini\Gapper\Client::getId();
         $me = _G('ME');
+        $result = "gapper/client/go/{$clientID}";
         if ($me->id) {
-            $gapperToken = \Gini\Gapper\Client::getLoginToken($clientID?:\Gini\Gapper\Client::getId());
-            if ($gapperToken) {
+		$result .= "/{$me->id}";
                 $group = _G('GROUP');
-                $url = \Gini\URI::url($app['url']."/gapper/client/login", [
-                    'gapper-token'=> $gapperToken,
-                    'gapper-group'=> $group->id,
-                    'redirect'=> $url
-                ]);
-            }
+		if ($group->id) {
+			$result .= "/{$group->id}";
+		}
         }
 
-        return $url;
+        return \Gini\URI::url("{$app['url']}/{$result}", [
+		'redirect'=> $url
+	]);
     }
 }
 
