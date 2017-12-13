@@ -26,15 +26,11 @@ class LabBase
 	$app = \Gini\Gapper\Client::getInfo();
 	$url = $app['url'] . "/" . ltrim($path, '/');
         $clientID = $clientID?:\Gini\Gapper\Client::getId();
-        $me = _G('ME');
         $result = "gapper/client/go/{$clientID}";
-        if ($me->id) {
-		$result .= "/{$me->id}";
-                $group = _G('GROUP');
-		if ($group->id) {
-			$result .= "/{$group->id}";
-		}
-        }
+	$group = _G('GROUP');
+	if ($group->id) {
+		$result .= "/{$group->id}";
+	}
 
         return \Gini\URI::url("{$app['url']}/{$result}", [
 		'redirect'=> $url
