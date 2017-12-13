@@ -20,5 +20,25 @@ class LabBase
 	$uri = parse_url($url);
 	return $uri['path'];
     }
+
+    public static function getRedirectUrl($path)
+    {
+	$app = \Gini\Gapper\Client::getInfo();
+	$url = $app['url'] . "/" . $path;
+        $me = _G('ME');
+        if ($me->id) {
+            $gapperToken = \Gini\Gapper\Client::getLoginToken(\Gini\Gapper\Client::getId());
+            if ($gapperToken) {
+                $group = _G('GROUP');
+                $url = \Gini\URI::url($app['url']."/gapper/client/login", [
+                    'gapper-token'=> $gapperToken,
+                    'gapper-group'=> $group->id,
+                    'redirect'=> $url
+                ]);
+            }
+        }
+
+        return $url;
+    }
 }
 
