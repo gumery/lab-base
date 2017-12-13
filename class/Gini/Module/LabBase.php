@@ -21,13 +21,13 @@ class LabBase
 	return $uri['path'];
     }
 
-    public static function getRedirectUrl($path)
+    public static function getRedirectUrl($path, $clientID=null)
     {
 	$app = \Gini\Gapper\Client::getInfo();
-	$url = $app['url'] . "/" . $path;
+	$url = $app['url'] . "/" . ltrim($path, '/');
         $me = _G('ME');
         if ($me->id) {
-            $gapperToken = \Gini\Gapper\Client::getLoginToken(\Gini\Gapper\Client::getId());
+            $gapperToken = \Gini\Gapper\Client::getLoginToken($clientID?:\Gini\Gapper\Client::getId());
             if ($gapperToken) {
                 $group = _G('GROUP');
                 $url = \Gini\URI::url($app['url']."/gapper/client/login", [

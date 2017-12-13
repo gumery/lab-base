@@ -241,7 +241,6 @@ class Base extends \Gini\Controller\REST
         if (isset($mtps[$module]) && $mtps[$module]) {
             return "{$mtps[$module]}";
         }
-	$moduleInfo = \Gini\Gapper\Client::getInfo($clientID);
-	return $moduleInfo['url'];
+	return \Gini\Module\LabBase::getRedirectUrl('/', $clientID);
     }
 }
