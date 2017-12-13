@@ -23,7 +23,7 @@ class LabBase
 
     public static function getRedirectUrl($path, $clientID=null)
     {
-	$app = \Gini\Gapper\Client::getInfo();
+	$app = \Gini\Gapper\Client::getInfo($clientID);
 	$url = $app['url'] . "/" . ltrim($path, '/');
         $me = _G('ME');
         if ($me->id) {
