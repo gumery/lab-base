@@ -97,13 +97,13 @@ class Base extends \Gini\Controller\REST
             // 设置侧边栏
             $bar = [];
             foreach ($groupApps as $clientID => $app) {
-                $shortURL = self::_getModuleURL($app['module_name']);
+                $shortURL = self::_getModuleURL($app['module_name'], $clientID);
                 // 设置 nav
                 $bar = [
                     'icon'          => $app['font_icon'],
                     'title'         => $app['short_title'] ?: $app['title'],
-                    'url'           => $shortURL ?: (($clientID===$currentID) ? '/' : "/gapper/client/go/{$clientID}/{$group->id}"),
-                    'is_selected'   => ($clientID === $currentID) ? true : false,
+                    'url'           => $shortURL ?: (($_SERVER['HTTP_X_CURRENT_MODULE']==$app['module_name']) ? $app['url'] : "{$app['url']}/gapper/client/go/{$clientID}/{$group->id}"),
+                    'is_selected'   => ($_SERVER['HTTP_X_CURRENT_MODULE']==$app['module_name']) ? true : false,
                     'sub'           => []
                 ];
 
@@ -174,7 +174,7 @@ class Base extends \Gini\Controller\REST
         // 商城信息
         $data['link_index'] = [
             'title' => $info['link']['title'],
-            'url'   => $info['link']['url'],
+            'url'   => self::_getHomeURL() ?: $info['link']['url'],
         ];
 
         // 二维码是否显示
@@ -193,10 +193,40 @@ class Base extends \Gini\Controller\REST
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', $response);
     }
 
+    private static function _getHomeURL()
+    {
+        if (\Gini\Gapper\Client::getLoginStep() !== \Gini\Gapper\Client::STEP_DONE) return;
+        $client_id = \Gini\Config::get('gapper.home_app_client');
+        $app = \Gini\Gapper\Client::getInfo($client_id);
+        if (!$app['url']) return;
+        $username = \Gini\Gapper\Client::getUserName();
+        if (!$username) return;
+        $token = \Gini\Gapper\Client::getLoginToken($client_id, $username);
+        if (!$token) return;
+        $url = $app['url'];
+        $confs = \Gini\Config::get('gapper.proxy');
+        foreach ((array)$confs as $conf) {
+            if ($url==$conf['url']) {
+                $url = $conf['proxy'] ?: $url;
+                break;
+            }
+        }
+        $url = \Gini\URI::url($url, 'gapper-token='.$token);
+        $group = _G('GROUP');
+        if ($group->id) {
+            $url = \Gini\URI::url($url, 'gapper-group='.$group->id);
+        }
+        return $url;
+    }
+
     private static function _getFEURL($url, $clientID)
     {
         $uri = \parse_url($url);
         if (!isset($uri['host'])) return $url;
+        $currentInfo = \Gini\Gapper\Client::getInfo();
+        $currentURL = $currentInfo['url'];
+        $currentURI = \parse_url($currentURL);
+        if ($currentURI['host']==$uri['host']) return $url;
         $scheme = $uri['scheme'] ?: 'http';
         $group = _G('GROUP');
         $result = "/gapper/client/go/{$clientID}/{$group->id}";
@@ -205,11 +235,13 @@ class Base extends \Gini\Controller\REST
         ]);
     }
 
-    private static function _getModuleURL($module)
+    private static function _getModuleURL($module, $clientID)
     {
         $mtps = (array) \Gini\Config::get('sidebar.module-to-path');
         if (isset($mtps[$module]) && $mtps[$module]) {
-            return "/{$mtps[$module]}";
+            return "{$mtps[$module]}";
         }
+	$moduleInfo = \Gini\Gapper\Client::getInfo($clientID);
+	return $moduleInfo['url'];
     }
 }

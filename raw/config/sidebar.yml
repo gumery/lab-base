@@ -4,7 +4,7 @@ subs:
     - title: 我要采购
       icon: shopping-cart
       # 每一个前端话的path，就不在需要制定域名信息了, 用path就可以了
-      url: /home
+      url: ${LAB_ORDERS_URL}/home
     - title: 订单列表
       icon: list-ul
       url: ${LAB_ORDERS_URL}/order/history
@@ -22,8 +22,8 @@ subs:
       icon: share-alt
       url: ${LAB_INVENTORY_URL}/dispense/list
 module-to-path:
-  lab-waste-cylinder: cylinders
-  lab-waste: waste
+  lab-waste-cylinder: ${LAB_FE_URL}/cylinders
+  lab-waste: ${LAB_FE_URL}waste
 link:
   title: ${HOME_APP_TITLE}
   url: ${HOME_URL}
