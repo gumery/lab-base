@@ -161,7 +161,7 @@ class Base extends \Gini\Controller\REST
 	if (!$realApp) $realApp = \Gini\Gapper\Client::getInfo();
 	return [
 		"{$realApp['url']}/gapper/client/login",
-		"{$realApp['url']}/logout",
+		\Gini\Module\LabBase::getFEUrl("logout"),
 	];
     }
 
