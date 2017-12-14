@@ -23,7 +23,7 @@ subs:
       url: ${LAB_INVENTORY_URL}/dispense/list
 module-to-path:
   lab-waste-cylinder: ${LAB_FE_URL}/cylinders
-  lab-waste: ${LAB_FE_URL}waste
+  lab-waste: ${LAB_FE_URL}/waste
 link:
   title: ${HOME_APP_TITLE}
   url: ${HOME_URL}
