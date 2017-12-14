@@ -7,23 +7,19 @@ class User extends \Gini\Controller\CGI\Rest\Base
     // 获取登录信息接口
     public function getSession()
     {
-        $response = $this->response(400);
-        $me = _G('ME');
-        $group = _G('GROUP');
         $session_id = session_id();
 
-        if (!$group->id || !$me->id || !$session_id) {
-            $response = $this->response(499);
-            goto response;
-        }
-
+        list($loginURL, $logoutURL) = self::getLoginURL();
         $data = [
-            'session_id' => $session_id
+            'session_id' => $session_id,
+            'url'=> ['login_in'=> $loginURL, 'login_out'=> $logoutURL]
         ];
-
-        $response = $this->response(200, null, $data);
-
-        response:
+	if (!_G('ME')->id || !_G('GROUP')->id) {
+		$code = 499
+	} else {
+		$code = 200;
+	}
+        $response = $this->response($code, null, $data);
         return \Gini\IoC::construct('\Gini\CGI\Response\Json', $response);
     }
 }

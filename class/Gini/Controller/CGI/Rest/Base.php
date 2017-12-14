@@ -71,53 +71,8 @@ class Base extends \Gini\Controller\REST
         //是否登录
         $isLogin = (!$me->id || !$group->id) ? false : true;
         if ($isLogin) {
-            // 获取当前应用的 gapper_id
-            $currentID = \Gini\Gapper\Client::getId();
-
-            // 获取 有二级菜单的 nav, 拿到所有有二级菜单的 gapper_id
-            $subs = $info['subs'] ?: [];
-
-            foreach($subs as $client_id => $sub) {
-                foreach($sub as $id => $item) {
-                    $subs[$client_id][$id]['url'] = self::_getFEURL($item['url'], $client_id);
-                }
-            }
-
-            // 获取该课题组的所有应用
-            $groupApps = (array) $group->getApps();
-
-            // 将应用按照 rate 的降序进行排列
-            uasort($groupApps, function($a, $b) {
-                $ra = $a['rate'];
-                $rb = $b['rate'];
-                if ($ra==$rb) return 0;
-                return ($ra > $rb) ? -1 : 1;
-            });
-
-            // 设置侧边栏
-            $bar = [];
-            foreach ($groupApps as $clientID => $app) {
-                $shortURL = self::_getModuleURL($app['module_name'], $clientID);
-                // 设置 nav
-                $bar = [
-                    'icon'          => $app['font_icon'],
-                    'title'         => $app['short_title'] ?: $app['title'],
-                    'url'           => $shortURL ?: (($_SERVER['HTTP_X_CURRENT_MODULE']==$app['module_name']) ? $app['url'] : "{$app['url']}/gapper/client/go/{$clientID}/{$group->id}"),
-                    'is_selected'   => ($_SERVER['HTTP_X_CURRENT_MODULE']==$app['module_name']) ? true : false,
-                    'sub'           => []
-                ];
-
-                // 如果该应用 有二级菜单 设置二级菜单
-                if (array_key_exists($clientID, $subs)) {
-                    $bar['sub'] = $subs[$clientID];
-                }
-
-                $sidebar[] = $bar;
-            }
-
-
             // 侧边栏
-            $data['sidebar'] = $sidebar ?: [];
+            $data['sidebar'] = self::getSidebarLinks();
 
             // 获取 用户头像及相关信息
             $icon = $me->icon();
@@ -165,10 +120,11 @@ class Base extends \Gini\Controller\REST
         }
 
         // 登录状态
+	list($loginURL, $logoutURL) = self::getLoginURL();
         $data['is_login'] = [
             'status' => $isLogin,
             'redirect' => true,
-            'url'    => $isLogin ? '' : \Gini\URI::url("{$appInfo['url']}/gapper/client/login")
+            'url'    => $isLogin ? '' : $loginURL
         ];
 
         // 商城信息
@@ -191,6 +147,76 @@ class Base extends \Gini\Controller\REST
 
         $response = $this->response(200, null, $data);
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', $response);
+    }
+
+    protected static function getLoginURL()
+    {
+	$apps = self::getApps();
+        foreach ($apps as $clientID=>$info) {
+		if (($_SERVER['HTTP_X_CURRENT_MODULE']==$info['module_name'])) {
+			$realApp = \Gini\Gapper\Client::getInfo($clientID);
+			break;
+		}
+	}
+	if (!$realApp) $realApp = \Gini\Gapper\Client::getInfo();
+	return [
+		"{$realApp['url']}/gapper/client/login",
+		"{$realApp['url']}/logout",
+	];
+    }
+
+    private static function getSidebarLinks()
+    {
+	$groupApps = self::getApps();
+	$group = _G('GROUP');
+	$result = [];
+        $info = \Gini\Config::get('sidebar') ?: [];
+	$subs = $info['subs'] ?: [];
+	foreach($subs as $client_id => $sub) {
+		foreach($sub as $id => $item) {
+		    $subs[$client_id][$id]['url'] = self::_getFEURL($item['url'], $client_id);
+		}
+	}
+	foreach ($groupApps as $clientID => $app) {
+		$shortURL = self::_getModuleURL($app['module_name'], $clientID);
+		$result[] = [
+			'icon'          => $app['font_icon'],
+			'title'         => $app['short_title'] ?: $app['title'],
+			'url'           => $shortURL ?: (($_SERVER['HTTP_X_CURRENT_MODULE']==$app['module_name']) ? $app['url'] : "{$app['url']}/gapper/client/go/{$clientID}/{$group->id}"),
+			'is_selected'   => ($_SERVER['HTTP_X_CURRENT_MODULE']==$app['module_name']) ? true : false,
+			'sub'           => @$subs[$clientID] ?: [];
+		];
+	}
+	return $result;
+    }
+
+    private static $_apps = [];
+    protected static function getApps()
+    {
+	if (!empty(self::$_apps)) return self::$_apps;
+        $me = _G('ME');
+        $group = _G('GROUP');
+        $apps = (array) $group->getApps();
+        $alloweds = \Gini\Config::get('sidebar.apps') ?: [];
+        foreach ($alloweds as $clientID=>$actions) {
+            $actions = (array) $actions;
+            if (!isset($apps[$clientID])) continue;
+            foreach ($actions as $action) {
+                if ($me->isAllowedTo($action)) {
+                    continue 2;
+                }
+            }
+            unset($apps[$clientID]);
+        }
+        uasort($apps, function($a, $b) {
+            $ra = $a['rate'];
+            $rb = $b['rate'];
+            if ($ra==$rb) return 0;
+            return ($ra>$rb) ? -1 : 1;
+        });
+
+	self::$_apps = $apps;
+        return $apps;
     }
 
     private static function _getHomeURL()
