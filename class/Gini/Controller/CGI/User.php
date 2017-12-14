@@ -15,7 +15,7 @@ class User extends \Gini\Controller\CGI\Rest\Base
             'url'=> ['login_in'=> $loginURL, 'login_out'=> $logoutURL]
         ];
 	if (!_G('ME')->id || !_G('GROUP')->id) {
-		$code = 499
+		$code = 499;
 	} else {
 		$code = 200;
 	}
