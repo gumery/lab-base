@@ -12,7 +12,7 @@ class User extends \Gini\Controller\CGI\Rest\Base
         list($loginURL, $logoutURL) = self::getLoginURL();
         $data = [
             'session_id' => $session_id,
-            'url'=> ['login_in'=> $loginURL, 'login_out'=> $logoutURL]
+            'url'=> ['login'=> $loginURL, 'logout'=> $logoutURL]
         ];
 	if (!_G('ME')->id || !_G('GROUP')->id) {
 		$code = 499;
