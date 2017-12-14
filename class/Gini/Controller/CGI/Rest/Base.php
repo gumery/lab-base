@@ -151,16 +151,8 @@ class Base extends \Gini\Controller\REST
 
     protected static function getLoginURL()
     {
-	$apps = self::getApps();
-        foreach ($apps as $clientID=>$info) {
-		if (($_SERVER['HTTP_X_CURRENT_MODULE']==$info['module_name'])) {
-			$realApp = \Gini\Gapper\Client::getInfo($clientID);
-			break;
-		}
-	}
-	if (!$realApp) $realApp = \Gini\Gapper\Client::getInfo();
 	return [
-		"{$realApp['url']}/gapper/client/login",
+		\Gini\Gapper\LabBase::getFEUrl("gapper/client/login"),
 		\Gini\Module\LabBase::getFEUrl("logout"),
 	];
     }
