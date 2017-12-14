@@ -152,7 +152,7 @@ class Base extends \Gini\Controller\REST
     protected static function getLoginURL()
     {
 	return [
-		\Gini\Module\LabBase::getFEUrl("gapper/client/login"),
+		\Gini\Gapper\LabBase::getFEUrl("gapper/client/login"),
 		\Gini\Module\LabBase::getFEUrl("logout"),
 	];
     }
