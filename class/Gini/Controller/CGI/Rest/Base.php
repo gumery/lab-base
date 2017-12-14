@@ -265,7 +265,8 @@ class Base extends \Gini\Controller\REST
     {
         $mtps = (array) \Gini\Config::get('sidebar.module-to-path');
         if (isset($mtps[$module]) && $mtps[$module]) {
-            return '/'.\Gini\Module\LabBase::getFEUrl($mtps[$module]);
+            //return '/'.\Gini\Module\LabBase::getFEUrl($mtps[$module]);
+            return "{$mtps[$module]}";
         }
 	return \Gini\Module\LabBase::getRedirectUrl('/', $clientID);
     }
