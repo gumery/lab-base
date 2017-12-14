@@ -184,7 +184,7 @@ class Base extends \Gini\Controller\REST
 			'title'         => $app['short_title'] ?: $app['title'],
 			'url'           => $shortURL ?: (($_SERVER['HTTP_X_CURRENT_MODULE']==$app['module_name']) ? $app['url'] : "{$app['url']}/gapper/client/go/{$clientID}/{$group->id}"),
 			'is_selected'   => ($_SERVER['HTTP_X_CURRENT_MODULE']==$app['module_name']) ? true : false,
-			'sub'           => @$subs[$clientID] ?: [];
+			'sub'           => @$subs[$clientID] ?: []
 		];
 	}
 	return $result;
