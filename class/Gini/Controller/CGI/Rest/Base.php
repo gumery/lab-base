@@ -153,7 +153,7 @@ class Base extends \Gini\Controller\REST
     {
 	$apps = self::getApps();
         foreach ($apps as $clientID=>$info) {
-		if (($_SERVER['HTTP_X_CURRENT_MODULE']==$info['module_name'])) {
+		if (($_GET['x-gini-current-module']==$info['module_name'])) {
 			$realApp = \Gini\Gapper\Client::getInfo($clientID);
 			break;
 		}
@@ -182,8 +182,8 @@ class Base extends \Gini\Controller\REST
 		$result[] = [
 			'icon'          => $app['font_icon'],
 			'title'         => $app['short_title'] ?: $app['title'],
-			'url'           => $shortURL ?: (($_SERVER['HTTP_X_CURRENT_MODULE']==$app['module_name']) ? $app['url'] : "{$app['url']}/gapper/client/go/{$clientID}/{$group->id}"),
-			'is_selected'   => ($_SERVER['HTTP_X_CURRENT_MODULE']==$app['module_name']) ? true : false,
+			'url'           => $shortURL ?: (($_GET['x-gini-current-module']==$app['module_name']) ? $app['url'] : "{$app['url']}/gapper/client/go/{$clientID}/{$group->id}"),
+			'is_selected'   => ($_GET['x-gini-current-module']==$app['module_name']) ? true : false,
 			'sub'           => @$subs[$clientID] ?: []
 		];
 	}
