@@ -23,8 +23,12 @@ class LabBase
                     $clientID = \Gini\Config::get('app.lab-fe-app-client-id');
                     $gapperToken = \Gini\Gapper\Client::getLoginToken($clientID);
                     if ($gapperToken) {
+			$app = \Gini\Gapper\Client::getInfo($clientID);
+			$feHost = parse_url($feURL)['host'];
+			$appHost = parse_url($app['url'])['host'];
+			$tmpURL = $feHost==$appHost ? $app['url'] : $feURL;
                         $group = _G('GROUP');
-                        $url = \Gini\URI::url($feURL."/gapper/client/login", [
+                        $url = \Gini\URI::url($tmpURL."/gapper/client/login", [
                             'gapper-token'=> $gapperToken,
                             'gapper-group'=> $group->id,
                             'redirect'=> $url
@@ -38,7 +42,7 @@ class LabBase
         return $uri['path'];
     }
 
-    public static function getRedirectUrl($path, $clientID=null, $justPath=false)
+    public static function getRedirectUrl($path, $clientID=null)
     {
         $app = \Gini\Gapper\Client::getInfo();
         $clientID = $clientID?:\Gini\Gapper\Client::getId();
@@ -51,13 +55,19 @@ class LabBase
             $result .= "/{$group->id}";
         }
 
+/*
         if ($justPath) {
-            return $result . '?' . http_build_query([
+            return "/".$result . '?' . http_build_query([
                 'redirect'=> $url
             ]);
         }
+*/
+        $feURL = \Gini\Config::get('app.lab-fe-url');
+	$feHost = parse_url($feURL)['host'];
+	$appHost = parse_url($app['url'])['host'];
+	$tmpURL = $feHost==$appHost ? $app['url'] : $feURL;
 
-        return \Gini\URI::url("{$app['url']}/{$result}", [
+        return \Gini\URI::url("{$tmpURL}/{$result}", [
             'redirect'=> $url
         ]);
     }
