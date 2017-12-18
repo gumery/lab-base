@@ -38,7 +38,7 @@ class LabBase
         return $uri['path'];
     }
 
-    public static function getRedirectUrl($path, $clientID=null)
+    public static function getRedirectUrl($path, $clientID=null, $justPath=false)
     {
         $app = \Gini\Gapper\Client::getInfo();
         $clientID = $clientID?:\Gini\Gapper\Client::getId();
@@ -51,8 +51,14 @@ class LabBase
             $result .= "/{$group->id}";
         }
 
+        if ($justPath) {
+            return $result . '?' . http_build_query([
+                'redirect'=> $url
+            ]);
+        }
+
         return \Gini\URI::url("{$app['url']}/{$result}", [
-        'redirect'=> $url
-    ]);
+            'redirect'=> $url
+        ]);
     }
 }
