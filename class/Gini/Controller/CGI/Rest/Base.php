@@ -268,6 +268,6 @@ class Base extends \Gini\Controller\REST
             //return '/'.\Gini\Module\LabBase::getFEUrl($mtps[$module]);
             return "{$mtps[$module]}";
         }
-	return \Gini\Module\LabBase::getRedirectUrl('/', $clientID);
+	return \Gini\Module\LabBase::getRedirectUrl('', $clientID);
     }
 }
