@@ -47,7 +47,22 @@ class LabBase
         $app = \Gini\Gapper\Client::getInfo();
         $clientID = $clientID?:\Gini\Gapper\Client::getId();
         $to = \Gini\Gapper\Client::getInfo($clientID);
-        $url = $to['url'] . "/" . ltrim($path, '/');
+        // $url = $to['url'] . "/" . ltrim($path, '/');
+
+        $url = $to['url'];
+        $ui = parse_url($url);
+        if (0===strpos($path, '/')) {
+            $url = $ui['scheme'] ?: 'http';
+            $url .= '://';
+            $url .= $ui['host'];
+            if ($ui['port']) {
+                $url .= ':'.$ui['port'];
+            }
+            $url .= $path;
+            $url = \Gini\URI::url($url);
+        } else {
+            $url = $url . '/' . $path;
+        }
 
         $result = "gapper/client/go/{$clientID}";
         $group = _G('GROUP');
