@@ -82,7 +82,7 @@ class LabBase
         $appHost = parse_url($app['url'])['host'];
         $tmpURL = $feHost==$appHost ? $app['url'] : $feURL;
 
-        if ($to['url']==$tmpURL) return $url;
+        if ($to['url']==$tmpURL || $to['url']==$app['url']) return $url;
 
         return \Gini\URI::url("{$tmpURL}/{$result}", [
             'redirect'=> $url
