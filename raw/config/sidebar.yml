@@ -24,6 +24,7 @@ subs:
 module-to-path:
   lab-waste-cylinder: ${LAB_FE_URL}/cylinders
   lab-waste: ${LAB_FE_URL}/waste
+  lab-waste-bottle: ${LAB_FE_URL}/bottles
 link:
   title: ${HOME_APP_TITLE}
   url: ${HOME_URL}
