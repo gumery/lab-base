@@ -19,26 +19,26 @@ class Base extends \Gini\Controller\REST
         // 获取 form
         $this->method = strtolower($this->env['method']);
         switch ($this->method) {
-        case 'get':
-            $form = $this->form('get');
-            break;
-        case 'post':
-            $form = $this->form('post');
-            break;
-        case 'patch':
-        case 'delete':
-        case 'put':
-            if ($this->form('put')) {
-                $form = $this->form('put');
-            } else {
-                $content = file_get_contents('php://input');
-                $form = json_decode($content, true);
-                if (!$form) {
-                    $form = [];
-                    parse_str($content, $form);
+            case 'get':
+                $form = $this->form('get');
+                break;
+            case 'post':
+                $form = $this->form('post');
+                break;
+            case 'patch':
+            case 'delete':
+            case 'put':
+                if ($this->form('put')) {
+                    $form = $this->form('put');
+                } else {
+                    $content = file_get_contents('php://input');
+                    $form = json_decode($content, true);
+                    if (!$form) {
+                        $form = [];
+                        parse_str($content, $form);
+                    }
                 }
-            }
-            break;
+                break;
         }
 
         $this->form = $form;
