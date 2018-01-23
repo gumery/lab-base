@@ -168,6 +168,7 @@ class Base extends \Gini\Controller\REST
     private static function getSidebarLinks()
     {
         $groupApps = self::getApps();
+        $me = _G('ME');
         $group = _G('GROUP');
         $result = [];
         $info = \Gini\Config::get('sidebar') ?: [];
@@ -175,6 +176,9 @@ class Base extends \Gini\Controller\REST
         foreach($subs as $client_id => $sub) {
             foreach($sub as $id => $item) {
                 $subs[$client_id][$id]['url'] = self::_getFEURL($item['url'], $client_id);
+                if (!$me->isAllowedTo('订单支付', 'order') && $item['title'] == '付款管理'){
+                    unset($subs[$client_id][$id]);
+                }
             }
         }
         foreach ($groupApps as $clientID => $app) {
