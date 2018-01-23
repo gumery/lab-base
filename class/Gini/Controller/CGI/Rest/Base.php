@@ -19,26 +19,26 @@ class Base extends \Gini\Controller\REST
         // 获取 form
         $this->method = strtolower($this->env['method']);
         switch ($this->method) {
-          case 'get':
-              $form = $this->form('get');
-              break;
-          case 'post':
-              $form = $this->form('post');
-              break;
-          case 'patch':
-          case 'delete':
-          case 'put':
-              if ($this->form('put')) {
-                  $form = $this->form('put');
-              } else {
-                  $content = file_get_contents('php://input');
-                  $form = json_decode($content, true);
-                  if (!$form) {
-                      $form = [];
-                      parse_str($content, $form);
-                  }
-              }
-              break;
+        case 'get':
+            $form = $this->form('get');
+            break;
+        case 'post':
+            $form = $this->form('post');
+            break;
+        case 'patch':
+        case 'delete':
+        case 'put':
+            if ($this->form('put')) {
+                $form = $this->form('put');
+            } else {
+                $content = file_get_contents('php://input');
+                $form = json_decode($content, true);
+                if (!$form) {
+                    $form = [];
+                    parse_str($content, $form);
+                }
+            }
+            break;
         }
 
         $this->form = $form;
@@ -120,7 +120,7 @@ class Base extends \Gini\Controller\REST
         }
 
         // 登录状态
-	list($loginURL, $logoutURL) = self::getLoginURL();
+        list($loginURL, $logoutURL) = self::getLoginURL();
         $data['is_login'] = [
             'status' => $isLogin,
             'redirect' => true,
@@ -151,49 +151,49 @@ class Base extends \Gini\Controller\REST
 
     protected static function getLoginURL()
     {
-	$apps = self::getApps();
+        $apps = self::getApps();
         foreach ($apps as $clientID=>$info) {
-		if (($_GET['x-gini-current-module']==$info['module_name'])) {
-			$realApp = \Gini\Gapper\Client::getInfo($clientID);
-			break;
-		}
-	}
-	if (!$realApp) $realApp = \Gini\Gapper\Client::getInfo();
-	return [
-		"{$realApp['url']}/gapper/client/login",
-		\Gini\Module\LabBase::getFEUrl("logout"),
-	];
+            if (($_GET['x-gini-current-module']==$info['module_name'])) {
+                $realApp = \Gini\Gapper\Client::getInfo($clientID);
+                break;
+            }
+        }
+        if (!$realApp) $realApp = \Gini\Gapper\Client::getInfo();
+        return [
+            "{$realApp['url']}/gapper/client/login",
+            \Gini\Module\LabBase::getFEUrl("logout"),
+        ];
     }
 
     private static function getSidebarLinks()
     {
-	$groupApps = self::getApps();
-	$group = _G('GROUP');
-	$result = [];
+        $groupApps = self::getApps();
+        $group = _G('GROUP');
+        $result = [];
         $info = \Gini\Config::get('sidebar') ?: [];
-	$subs = $info['subs'] ?: [];
-	foreach($subs as $client_id => $sub) {
-		foreach($sub as $id => $item) {
-		    $subs[$client_id][$id]['url'] = self::_getFEURL($item['url'], $client_id);
-		}
-	}
-	foreach ($groupApps as $clientID => $app) {
-		$shortURL = self::_getModuleURL($app['module_name'], $clientID);
-		$result[] = [
-			'icon'          => $app['font_icon'],
-			'title'         => $app['short_title'] ?: $app['title'],
-			'url'           => $shortURL ?: (($_GET['x-gini-current-module']==$app['module_name']) ? $app['url'] : "{$app['url']}/gapper/client/go/{$clientID}/{$group->id}"),
-			'is_selected'   => ($_GET['x-gini-current-module']==$app['module_name']) ? true : false,
-			'sub'           => @$subs[$clientID] ?: []
-		];
-	}
-	return $result;
+        $subs = $info['subs'] ?: [];
+        foreach($subs as $client_id => $sub) {
+            foreach($sub as $id => $item) {
+                $subs[$client_id][$id]['url'] = self::_getFEURL($item['url'], $client_id);
+            }
+        }
+        foreach ($groupApps as $clientID => $app) {
+            $shortURL = self::_getModuleURL($app['module_name'], $clientID);
+            $result[] = [
+                'icon'          => $app['font_icon'],
+                'title'         => $app['short_title'] ?: $app['title'],
+                'url'           => $shortURL ?: (($_GET['x-gini-current-module']==$app['module_name']) ? $app['url'] : "{$app['url']}/gapper/client/go/{$clientID}/{$group->id}"),
+                'is_selected'   => ($_GET['x-gini-current-module']==$app['module_name']) ? true : false,
+                'sub'           => @$subs[$clientID] ?: []
+            ];
+        }
+        return $result;
     }
 
     private static $_apps = [];
     protected static function getApps()
     {
-	if (!empty(self::$_apps)) return self::$_apps;
+        if (!empty(self::$_apps)) return self::$_apps;
         $me = _G('ME');
         $group = _G('GROUP');
         $apps = (array) $group->getApps();
@@ -215,7 +215,7 @@ class Base extends \Gini\Controller\REST
             return ($ra>$rb) ? -1 : 1;
         });
 
-	self::$_apps = $apps;
+        self::$_apps = $apps;
         return $apps;
     }
 
@@ -268,6 +268,6 @@ class Base extends \Gini\Controller\REST
             //return '/'.\Gini\Module\LabBase::getFEUrl($mtps[$module]);
             return "{$mtps[$module]}";
         }
-	return \Gini\Module\LabBase::getRedirectUrl('', $clientID);
+        return \Gini\Module\LabBase::getRedirectUrl('', $clientID);
     }
 }
