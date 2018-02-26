@@ -168,7 +168,6 @@ class Base extends \Gini\Controller\REST
     private static function getSidebarLinks()
     {
         $groupApps = self::getApps();
-        $me = _G('ME');
         $group = _G('GROUP');
         $result = [];
         $info = \Gini\Config::get('sidebar') ?: [];
@@ -176,7 +175,7 @@ class Base extends \Gini\Controller\REST
         foreach($subs as $client_id => $sub) {
             foreach($sub as $id => $item) {
                 $subs[$client_id][$id]['url'] = self::_getFEURL($item['url'], $client_id);
-                if (!empty($item['url_check_callback']) && call_user_func($item['url_check_callback']) === false) {
+                if (!empty($item['url_check_callback']) && is_callable($item['url_check_callback']) && call_user_func($item['url_check_callback']) === false) {
                     unset($subs[$client_id][$id]);
                 }
             }
