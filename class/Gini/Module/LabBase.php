@@ -88,4 +88,13 @@ class LabBase
             'redirect'=> $url
         ]);
     }
+
+    public static function isShowPaymentManage()
+    {
+        $me = _G('ME');
+        if (!$me->isAllowedTo('订单支付', 'order')){
+            return false;
+        }
+        return true;
+    }
 }
