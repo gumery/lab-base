@@ -11,6 +11,7 @@ subs:
     - title: 付款管理
       icon: credit-card
       url: ${LAB_ORDERS_URL}/payment/history
+      url_check_callback: \Gini\Module\LabBase::isShowPaymentManage
   ${LAB_INVENTORY_GAPPER_ID}:
     - title: 存货列表
       icon: list-ul
