@@ -7,19 +7,60 @@ class User extends \Gini\Controller\CGI\Rest\Base
     // 获取登录信息接口
     public function getSession()
     {
-        $session_id = session_id();
-
+        // 获取 登录 登出 url
         list($loginURL, $logoutURL) = self::getLoginURL();
+
+        // 获取 用户 信息
+        $userInfo = self::_getUserInfo();
+
         $data = [
-            'session_id' => $session_id,
-            'url'=> ['login'=> $loginURL, 'logout'=> $logoutURL]
+            'session_id' => session_id(),
+            'url'        => [
+                'login'  => $loginURL,
+                'logout' => $logoutURL
+            ],
+            'user'       => [
+                'name'         => $userInfo['name'],
+                'icon_type'    => $userInfo['iconType'],
+                'icon_content' => $userInfo['iconContent']
+            ]
         ];
-	if (!_G('ME')->id || !_G('GROUP')->id) {
-		$code = 499;
-	} else {
-		$code = 200;
-	}
+
+        $code = self::_isLogin() ? 200 : 499;
         $response = $this->response($code, null, $data);
         return \Gini\IoC::construct('\Gini\CGI\Response\Json', $response);
+    }
+
+    // 判断是否登录
+    private static function _isLogin()
+    {
+        return _G('ME')->id && _G('GROUP')->id;
+    }
+
+    // 获取用户信息
+    private static function _getUserInfo()
+    {
+        $userInfo = [];
+
+        $me = _G('ME');
+        if (!$me->id) {
+            return $userInfo;
+        }
+
+        // 用户头像
+        $icon = $me->icon();
+        if (parse_url($icon)['scheme'] == 'initials') {
+            $iconContent    = $me -> initials;
+            $iconType       = 'text';
+        } else {
+            $iconContent = $me -> icon(72);
+            $iconType    = 'img';
+        }
+
+        $userInfo['iconType']       = $iconType;
+        $userInfo['iconContent']    = $iconContent;
+        $userInfo['name']           = $me->name;
+
+        return $userInfo;
     }
 }
