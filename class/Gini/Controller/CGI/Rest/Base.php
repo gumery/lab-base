@@ -149,6 +149,12 @@ class Base extends \Gini\Controller\REST
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', $response);
     }
 
+    // 判断是否登录
+    protected function isLogin()
+    {
+        return _G('ME')->id && _G('GROUP')->id;
+    }
+
     protected static function getLoginURL()
     {
         $apps = self::getApps();

@@ -26,15 +26,9 @@ class User extends \Gini\Controller\CGI\Rest\Base
             ]
         ];
 
-        $code = self::_isLogin() ? 200 : 499;
+        $code = $this->isLogin() ? 200 : 499;
         $response = $this->response($code, null, $data);
         return \Gini\IoC::construct('\Gini\CGI\Response\Json', $response);
-    }
-
-    // 判断是否登录
-    private static function _isLogin()
-    {
-        return _G('ME')->id && _G('GROUP')->id;
     }
 
     // 获取用户信息
