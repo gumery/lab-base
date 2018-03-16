@@ -4,9 +4,9 @@
 <div class="form-group<?=$vError ? ' has-error' : ''?>">
     <div>
         <?php if (empty($rooms)) { ?>
-        <input type="text" class="form-control" name="<?=is_null($multiKey)?'room':"room[{$multiKey}]"?>" value="<?=H($selected)?>" placeholder="<?= H(T('请填写房间号'))?>" />
+        <input type="text" class="form-control" name="<?=H(is_null($multiKey)?'room':"room[{$multiKey}]")?>" value="<?=H($selected)?>" placeholder="<?= H(T('请填写房间号'))?>" />
         <?php } else { ?>
-        <select name="<?=is_null($multiKey)?'room':"room[{$multiKey}]"?>" 
+        <select name="<?=H(is_null($multiKey)?'room':"room[{$multiKey}]")?>" 
         class="selectpicker form-control"
         data-live-search="true"
         >
