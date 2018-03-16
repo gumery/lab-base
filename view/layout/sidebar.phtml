@@ -24,7 +24,7 @@ $group = _G('GROUP');
     foreach ((array)$apps as $app_id => $app) {
     ?>
         <div class="menu-item">
-            <a<?=($currentAppID==$app_id)?' class="active"':''?> href="gapper/client/go/<?=H($app_id)?>/<?=H($group->id)?>"><i class="fa fa-fw fa-<?= H($app['font_icon']?:'cubes') ?>"></i> &nbsp;<?= H($app['short_title'] ?: $app['title']) ?></a>
+            <a<?=($currentAppID==$app_id)?' class="active"':''?> href="gapper/client/go/<?=$app_id?>/<?=$group->id?>"><i class="fa fa-fw fa-<?= H($app['font_icon']?:'cubes') ?>"></i> &nbsp;<?= H($app['short_title'] ?: $app['title']) ?></a>
             <?php 
                 if ($currentAppID==$app_id) {
                     $vSubMenu = (string) @V('sidebar/sub-menu', [
