@@ -44,10 +44,10 @@ class User extends \Gini\Controller\CGI\Rest\Base
         // 用户头像
         $icon = $me->icon();
         if (parse_url($icon)['scheme'] == 'initials') {
-            $iconContent    = $me -> initials;
+            $iconContent    = $me->initials;
             $iconType       = 'text';
         } else {
-            $iconContent = $me -> icon(72);
+            $iconContent = $me->icon(72);
             $iconType    = 'img';
         }
 
