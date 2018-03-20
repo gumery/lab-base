@@ -150,7 +150,7 @@ class Base extends \Gini\Controller\REST
     }
 
     // 判断是否登录
-    protected function isLogin()
+    protected static function isLogin()
     {
         return _G('ME')->id && _G('GROUP')->id;
     }
@@ -202,9 +202,15 @@ class Base extends \Gini\Controller\REST
     private static $_apps = [];
     protected static function getApps()
     {
+        $apps = [];
         if (!empty(self::$_apps)) return self::$_apps;
         $me = _G('ME');
         $group = _G('GROUP');
+
+        if (!self::isLogin()) {
+            return $apps;
+        }
+
         $apps = (array) $group->getApps();
         $alloweds = \Gini\Config::get('sidebar.apps') ?: [];
         foreach ($alloweds as $clientID=>$actions) {
