@@ -236,27 +236,9 @@ class Base extends \Gini\Controller\REST
 
     private static function _getHomeURL()
     {
-        if (\Gini\Gapper\Client::getLoginStep() !== \Gini\Gapper\Client::STEP_DONE) return;
-        $client_id = \Gini\Config::get('gapper.home_app_client');
-        $app = \Gini\Gapper\Client::getInfo($client_id);
-        if (!$app['url']) return;
-        $username = \Gini\Gapper\Client::getUserName();
-        if (!$username) return;
-        $token = \Gini\Gapper\Client::getLoginToken($client_id, $username);
-        if (!$token) return;
-        $url = $app['url'];
-        $confs = \Gini\Config::get('gapper.proxy');
-        foreach ((array)$confs as $conf) {
-            if ($url==$conf['url']) {
-                $url = $conf['proxy'] ?: $url;
-                break;
-            }
-        }
-        $url = \Gini\URI::url($url, 'gapper-token='.$token);
-        $group = _G('GROUP');
-        if ($group->id) {
-            $url = \Gini\URI::url($url, 'gapper-group='.$group->id);
-        }
+        $appInfo = \Gini\Gapper\Client::getInfo();
+        $appUrl = rtrim($appInfo['url'], '/');
+        $url = $appUrl.'/gapper/client/gohome';
         return $url;
     }
 
