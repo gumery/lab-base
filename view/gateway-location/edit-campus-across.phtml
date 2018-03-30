@@ -3,7 +3,7 @@
 ?>
 <div class="form-group<?=$vError ? ' has-error' : ''?> col-xs-3" style="padding-left:0px;" data-require="plugin/edit/gateway-location">
     <div><select
-    name="<?=is_null($multiKey)?'campus':"campus[{$multiKey}]"?>"
+    name="<?=H(is_null($multiKey)?'campus':"campus[{$multiKey}]")?>"
     class="selectpicker form-control app-location-select-courier"
     data-live-search="true"
     data-is-across="<?=H($across ?: '')?>"
