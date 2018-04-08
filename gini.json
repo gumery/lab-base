@@ -2,7 +2,7 @@
     "id": "lab-base",
     "name": "Lab Base",
     "description": "Lab Base",
-    "version": "0.1.45",
+    "version": "0.1.46",
     "dependencies": {
         "app-base": "*",
         "gapper": "*",
