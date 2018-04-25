@@ -1,23 +1,30 @@
-<?php 
+<?php
 	$vError = is_null($multiKey) ? $errors['building'] : $errors['building'][$multiKey];
 ?>
 <div class="form-group<?=$vError ? ' has-error' : ''?>">
-<div>
-    <select 
-        name="<?=H(is_null($multiKey)?'building':"building[{$multiKey}]")?>" 
-        class="selectpicker form-control app-location-select-courier" 
-        data-sub-class="content-building-sub-rooms<?=H(is_null($multiKey)?'':"-{$multiKey}")?>" 
+<div <?= H($isWechat ? 'style="position:relative;"' : '')?>>
+    <select
+        name="<?=H(is_null($multiKey)?'building':"building[{$multiKey}]")?>"
+        class="selectpicker form-control app-location-select-courier"
+        data-sub-class="content-building-sub-rooms<?=H(is_null($multiKey)?'':"-{$multiKey}")?>"
         data-sub-url="ajax/gatewaylocation/get-sub-rooms"
         data-live-search="true"
         >
         <?php foreach ($buildings as $vBuilding) {?>
         <option value="<?=H($vBuilding['code'])?>"<?=$vBuilding['code']==$selected?' selected="selected"':''?>><?=H($vBuilding['name'])?></option>
         <?php }?>
-    </select></div>
+    </select>
+	<?php if ($isWechat) { ?>
+		<i style="position:absolute;margin-top:-29px;right:15px;" class="fa fa-chevron-right"></i>
+	<?php } ?>
+</div>
 	<?php if ($vError) {?>
 	<div class="text-right text-danger"><?=H($vError)?></div>
 	<?php }?>
 </div>
+<?php if ($isWechat) { ?>
+	<hr style="margin:0px;border:0px;background-color:#f7f3f3;height:1px;"/>
+<?php } ?>
 <div class="content-building-sub-rooms<?=H(is_null($multiKey)?'':"-{$multiKey}")?>">
     <?=$room?>
 </div>
