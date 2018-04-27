@@ -61,5 +61,5 @@ define('plugin/edit/gateway-location', ['jquery', 'bootstrap', 'bootbox', 'boots
 				$('.selectpicker').selectpicker();
 			}
 		}
-    }
+    };
 });
