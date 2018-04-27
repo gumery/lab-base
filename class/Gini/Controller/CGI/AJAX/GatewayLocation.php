@@ -6,7 +6,6 @@ class GatewayLocation extends \Gini\Controller\CGI
 {
     private static $multiKey = null;
     private static $across = null;
-    private static $isWechat = null;
 
     public function actionGetCampuses()
     {
@@ -34,11 +33,10 @@ class GatewayLocation extends \Gini\Controller\CGI
         return \Gini\IoC::construct('\Gini\CGI\Response\JSON', (string)self::getLocationRoom($code));
     }
 
-    public static function getLocationCampus($campusCode, $buildingCode, $roomName, array $form=[], $errors=null, $multiKey=null, $across=false, $isWechat=false)
+    public static function getLocationCampus($campusCode, $buildingCode, $roomName, array $form=[], $errors=null, $multiKey=null, $across=false)
     {
         self::$multiKey = $multiKey;
         self::$across= $across;
-        self::$isWechat= $isWechat;
         try {
             $campuses = \Gini\Gapper\Auth\Gateway::getCampuses();
             if (empty($campuses)) {
@@ -57,11 +55,10 @@ class GatewayLocation extends \Gini\Controller\CGI
             'building'=> (string)self::getLocationBuilding($cid, $buildingCode, $roomName, $form, $errors),
             'errors'=> $errors,
             'across'=> $across,
-            'isWechat'=> $isWechat,
         ]);
     }
 
-    public static function getLocationBuilding($campusCode, $buildingCode=null, $roomName=null, array $form=[], $errors=null)
+    public static function getLocationBuilding($campusCode, $buildingCode=null, $roomName=null, array $form=[], $errors=null, $across=false)
     {
         try {
             $buildings = \Gini\Gapper\Auth\Gateway::getBuildings(['campus'=>$campusCode]);
@@ -80,7 +77,6 @@ class GatewayLocation extends \Gini\Controller\CGI
             'buildings'=> $buildings,
             'room'=> (string)self::getLocationRoom($bid, $roomName, $form, $errors),
             'errors'=> $errors,
-            'isWechat'=> self::$isWechat,
         ]);
     }
 
@@ -98,7 +94,6 @@ class GatewayLocation extends \Gini\Controller\CGI
             'multiKey'=> self::$multiKey,
             'rooms'=> $rooms,
             'errors'=> $errors,
-            'isWechat'=> self::$isWechat,
         ]);
     }
 
