@@ -2,21 +2,18 @@
 	$vError = is_null($multiKey) ? $errors['room'] : $errors['room'][$multiKey];
 ?>
 <div class="form-group<?=$vError ? ' has-error' : ''?>">
-    <div <?= H($isWechat ? 'style="position:relative;"' : '')?>>
+    <div>
         <?php if (empty($rooms)) { ?>
         <input type="text" class="form-control" name="<?=H(is_null($multiKey)?'room':"room[{$multiKey}]")?>" value="<?=H($selected)?>" placeholder="<?= H(T('请填写房间号'))?>" />
         <?php } else { ?>
         <select name="<?=H(is_null($multiKey)?'room':"room[{$multiKey}]")?>"
-        class="selectpicker form-control"
+        class="selectpicker form-control app-location-select-courier"
         data-live-search="true"
         >
             <?php foreach ($rooms as $vRoom) {?>
             <option value="<?=H($vRoom['name'])?>"<?=$vRoom['name']==$selected?' selected="selected"':''?>><?=H($vRoom['name'])?></option>
             <?php }?>
         </select>
-	<?php if ($isWechat) { ?>
-		<i style="position:absolute;margin-top:-29px;right:15px;" class="fa fa-chevron-right"></i>
-	<?php } ?>
         <?php }?>
     </div>
 	<?php if ($vError) {?>
