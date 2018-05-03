@@ -1,0 +1,15 @@
+.arrows-tip{
+    position:absolute;
+    margin-top:-29px;
+    right:15px;
+}
+
+.line-tip{
+    margin:0px;
+    border:0px;
+    background-color:#f7f3f3;
+    height:1px;
+}
+.position-tip{
+    position:relative;
+}

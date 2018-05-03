@@ -1,4 +1,4 @@
-define('plugin/edit/gateway-location', ['jquery', 'bootstrap', 'bootbox', 'bootstrap-select'], function($, Bootstrap, Bootbox, BootSelect) {
+define('plugin/edit/gateway-location', ['jquery', 'bootstrap', 'bootbox', 'bootstrap-select', 'css!../../../css/mobile-terminal.css'], function($, Bootstrap, Bootbox, BootSelect) {
     var checkMobile;
     if (typeof window.orientation == 'undefined') {
         checkMobile = false;
@@ -6,6 +6,13 @@ define('plugin/edit/gateway-location', ['jquery', 'bootstrap', 'bootbox', 'boots
     else {
         checkMobile = true;
     }
+
+    var isWeixin = false;  //判断是否是微信
+    var ua = navigator.userAgent.toLowerCase();
+    if (ua.match(/MicroMessenger/i) == "micromessenger") {
+ 	isWeixin = true;
+    }
+
     $('body').on('change', '.app-location-select-courier', function() {
         var $that = $(this);
         var kk = $that.attr('name');
@@ -38,9 +45,16 @@ define('plugin/edit/gateway-location', ['jquery', 'bootstrap', 'bootbox', 'boots
             }
         });
     });
+
     if (!checkMobile) {
         $('.selectpicker').selectpicker();
+    } else if (isWeixin) {
+        var myPa = $('select.app-location-select-courier').parent();
+        myPa.addClass('position-tip');
+        myPa.append('<i class="fa fa-chevron-right arrows-tip"></i>');
+        $('div.form-group').after('<hr class="line-tip"/>');
     }
+
     return {
 		loopMe: function() {
 			if (!checkMobile) {
