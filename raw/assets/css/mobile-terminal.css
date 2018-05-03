@@ -2,6 +2,7 @@
     position:absolute;
     margin-top:-29px;
     right:15px;
+    display:none;
 }
 
 .line-tip{
@@ -9,6 +10,7 @@
     border:0px;
     background-color:#f7f3f3;
     height:1px;
+    display:none;
 }
 .position-tip{
     position:relative;

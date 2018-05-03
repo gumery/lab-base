@@ -11,11 +11,14 @@
         <?php foreach ($campuses as $vCampus) {?>
         <option value="<?=H($vCampus['code'])?>"<?=$vCampus['code']==$selected?' selected="selected"':''?>><?=H($vCampus['name'])?></option>
         <?php }?>
-    </select></div>
+    </select>
+	<i class="fa fa-chevron-right arrows-tip"></i>
+	</div>
 	<?php if ($vError) {?>
 	<div class="text-right text-danger"><?=H($vError)?></div>
 	<?php }?>
 </div>
+<hr class="line-tip"/>
 <div class="content-campus-sub-buildings<?=H(is_null($multiKey)?'':"-{$multiKey}")?>">
     <?=$building?>
 </div>

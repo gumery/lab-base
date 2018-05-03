@@ -10,7 +10,7 @@ define('plugin/edit/gateway-location', ['jquery', 'bootstrap', 'bootbox', 'boots
     var isWeixin = false;  //判断是否是微信
     var ua = navigator.userAgent.toLowerCase();
     if (ua.match(/MicroMessenger/i) == "micromessenger") {
- 	isWeixin = true;
+        isWeixin = true;
     }
 
     $('body').on('change', '.app-location-select-courier', function() {
@@ -46,20 +46,20 @@ define('plugin/edit/gateway-location', ['jquery', 'bootstrap', 'bootbox', 'boots
         });
     });
 
-    if (!checkMobile) {
-        $('.selectpicker').selectpicker();
-    } else if (isWeixin) {
-        var myPa = $('select.app-location-select-courier').parent();
-        myPa.addClass('position-tip');
-        myPa.append('<i class="fa fa-chevron-right arrows-tip"></i>');
-        $('div.form-group').after('<hr class="line-tip"/>');
+    function renderMe() {
+        if (!checkMobile) {
+            $('.selectpicker').selectpicker();
+        } else if (isWeixin) {
+            var myPa = $('div.app-location-select-courier').parent();
+            myPa.addClass('position-tip');
+            myPa.find('i').show();
+            $('div.form-group').parent().find('hr').show();
+        }
     }
 
+    renderMe();
+
     return {
-		loopMe: function() {
-			if (!checkMobile) {
-				$('.selectpicker').selectpicker();
-			}
-		}
+        loopMe: renderMe
     };
 });
